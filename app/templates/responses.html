@@ -5,11 +5,11 @@
 <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button> 
 <p></p>
 
-{% for i in range(6) %}
+{% for i in (responses) %}
 	<article class="media content-section">
 	  <div class="media-body">
 	    <div class="article-metadata">
-	      <b><big>Fråga {{ i+1 }}</big><p>{{ questions[i] }}</p></b>
+	      <b><big>Fråga {{ i }}</big><p>{{ questions[i] }}</p></b>
 	    </div>
 	    <a>{{ responses[i] }}</a>
 	  </div>

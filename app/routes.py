@@ -6,14 +6,14 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
 
-Questions = [
-	'Hur viktigt är det att: Säkerställa att era fordon ger ett intryck som ligger i linje med ert varumärke? \n skala 1-5', #q1
-	'Hur viktigt är det att: Leva upp till våra kunders miljökrav på sina leverantörers fordonspark? \n skala 1-5',	#q2
-	'Hur viktigt är det att: Anpassa fordonsparken till vår miljöambition? \n skala 1-5', #q3
-	'Vad är det specifikt ni inte är nöjda med? (t.ex tid, kostnad, kvalitet)?', #q4
-	'På vilket sätt är detta viktigt - vad är konsekvenserna om ni inte lyckas?', #q5
-	'Har ni några tankar på hur ni kan åtgärda detta (finns plan? budget=..)' #q6
-]
+Questions = {
+	'q1' : 'Hur viktigt är det att: Säkerställa att era fordon ger ett intryck som ligger i linje med ert varumärke? \n skala 1-5',
+	'q2' : 'Hur viktigt är det att: Leva upp till våra kunders miljökrav på sina leverantörers fordonspark? \n skala 1-5',
+	'q3' : 'Hur viktigt är det att: Anpassa fordonsparken till vår miljöambition? \n skala 1-5',
+	'q4' : 'Vad är det specifikt ni inte är nöjda med? (t.ex tid, kostnad, kvalitet)?',
+	'q5' : 'På vilket sätt är detta viktigt - vad är konsekvenserna om ni inte lyckas?',
+	'q6' : 'Har ni några tankar på hur ni kan åtgärda detta (finns plan? budget=..)'
+}
 
 #
 #	Detta är route-filen som exekverar olika saker beroende på klientens GET-request
@@ -40,7 +40,7 @@ def kund():
 @login_required
 def responses(foretag):
 	responses = Responses.query.filter_by(company=foretag).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
-	res = responses.return_responses()	# Funktion i DB-objektet som returnerar en lista med alla svar för att det skall gå att itterera igenom i HTML-dokumentet
+	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
 	return render_template('responses.html', title=foretag, responses=res, questions=Questions) # Renderar responses.html, res = lista med svar, Questions = hårkodad lista med respektive fråga, form=Responseform som är skapad i Forms.py
 
 
@@ -91,7 +91,7 @@ def login():
 	form = LoginForm()					# Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
 	if form.validate_on_submit():		# OM SubmitField klickas, kör nedan
 		# Kod som kontrollerar om användaren finns i databasen
-		user = User.query.filter_by(email=form.email.data).first() # Försöker hämta användaren i databasen genom att kolla om det finns ett User-objekt med angiven email
+		user = User.query.filter_by(email=form.email.data).first() 					# Försöker hämta användaren i databasen genom att kolla om det finns ett User-objekt med angiven email
 		if user and bcrypt.check_password_hash(user.password, form.password.data):  # Om användarnamnet stämmer samt om lösenordet som användaren skrivit in i formen stämmer med det hashade lösenordet i databasen, kör nedan
 			login_user(user, remember=form.remember.data)							# login_user är en importerad modul från flask. remember är en form som finns i Forms.py. En check-box "remember me"
 			next_page = request.args.get('next')									# Funktion som tar dig till den sidan du va på innan, om du försökt klicka på kundsida men inte kommit åt den pga att du inte var inloggad, så ska du redirectas till den och inte första-sidan när du lyckats logga in

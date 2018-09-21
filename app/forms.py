@@ -17,9 +17,9 @@ from app.models import User
 # Form för registrering av användarkonto på hemsidan
 class RegistrationForm(FlaskForm):
 	# Input fields and requirements
-	email = StringField('Email', validators=[DataRequired(), Email()])
+	email = StringField('E-mail', validators=[DataRequired(), Email()])
 	password = PasswordField('Lösenord', validators=[DataRequired()])
-	confirm_password = PasswordField('Konfirmera lösenord', 
+	confirm_password = PasswordField('Bekräfta lösenord',
 		validators=[DataRequired(), EqualTo('password')])
 	company = SelectField('Företag', choices=[('VF', 'Välj företag'),('V', 'Volvo'), ('VW', 'Volkswagen'), ('A', 'Audi'), ('S', 'Skoda')], validators=[DataRequired()]) # Vilket företag jobbar personen i fråga på
 	submit = SubmitField('Registrera')
@@ -29,7 +29,7 @@ class RegistrationForm(FlaskForm):
 	def validate_email(self, email):
 		email = User.query.filter_by(email=email.data).first()
 		if email:
-			raise ValidationError('Mailadressen finns redan. Välj en annan.')
+			raise ValidationError('Mailadressen finns redan. Glömt Lösenordet? Annars välj en annan.')
 
 
 # Form för att logga in, påminner lite om RegistrationForm
