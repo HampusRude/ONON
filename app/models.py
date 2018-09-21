@@ -34,7 +34,7 @@ class User(db.Model, UserMixin):
 		return User.query.get(user_id)				# retuenerar User-objektet kopplat till användaren mha user_id
 
 	def __repr__(self):
-		return f"User('{self.email}')"				# Detta är det man får tillbaks om man printar objektet. Alltså inte PW eller id, bara mailen
+		return "User('{self.email}')"				# Detta är det man får tillbaks om man printar objektet. Alltså inte PW eller id, bara mailen
 
 
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
@@ -56,7 +56,7 @@ class Responses(db.Model, UserMixin):
 
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return f"Responses('{self.afnum}', '{self.company}', '{self.orgnum}', '{self.kam}')"
+		return "Responses('{self.afnum}', '{self.company}', '{self.orgnum}', '{self.kam}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):

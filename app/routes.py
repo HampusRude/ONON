@@ -79,7 +79,7 @@ def register():
 			user = User(email=form.email.data, password=hashed_password, company=form.company.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
 			db.session.add(user)	# SQLAlchemy kommando för att adda objektet
 			db.session.commit() 	# commitar till databasen
-			flash(f'Konto skapat för {form.email.data}! Du kan nu logga in', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+			flash('Konto skapat för {form.email.data}! Du kan nu logga in', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
 			return redirect(url_for('login'))												# För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
 	return render_template('register.html', title='Register', form=form) # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
 
@@ -158,11 +158,8 @@ def send_reset_email(user):
 		sender='noreply@ONONAB.com', 
 		recipients=[user.email])			# Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
 	# Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
-	msg.body = f'''Klicka på följande länk för att återställa ditt lösenord:
-
+	msg.body = '''Klicka på följande länk för att återställa ditt lösenord:
 {url_for('reset_token', token=token, _external=True)}
-
-
 '''
 
 	mail.send(msg)	# Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
@@ -183,6 +180,6 @@ def reset_token(token):
 		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') # Hashar det nya lösenordet som anges i PasswordField
 		user.password = hashed_password		# Updaterar det aktuella user-objektet
 		db.session.commit()					# commitar till databasen (viola det är nu ändrat)
-		flash(f'Lösenordet är nu återstält! Du kan nu logga in igen', 'success')
+		flash('Lösenordet är nu återstält! Du kan nu logga in igen', 'success')
 		return redirect(url_for('login'))	# Redirectar dig till login så att du kan logga in med det nya lösenordet
 	return render_template('reset_token.html', title='Reset Password', form=form)	# Renderar reset_token.html 
