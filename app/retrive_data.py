@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import requests
-import json
-import pickle
-import psycopg2
-from q_dict import question_id_dict
 
 ### Saves a python object to external file
 def save_obj(obj, file_name):
