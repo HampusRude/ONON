@@ -183,5 +183,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-# ToDo  Format timestamp and send to database
 # TODO: Implement SQLAlchemy
+# ToDo  Format timestamp and send to database
