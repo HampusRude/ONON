@@ -6,14 +6,14 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
 
-Questions = {
-	'q1' : 'Hur viktigt är det att: Säkerställa att era fordon ger ett intryck som ligger i linje med ert varumärke? \n skala 1-5',
-	'q2' : 'Hur viktigt är det att: Leva upp till våra kunders miljökrav på sina leverantörers fordonspark? \n skala 1-5',
-	'q3' : 'Hur viktigt är det att: Anpassa fordonsparken till vår miljöambition? \n skala 1-5',
-	'q4' : 'Vad är det specifikt ni inte är nöjda med? (t.ex tid, kostnad, kvalitet)?',
-	'q5' : 'På vilket sätt är detta viktigt - vad är konsekvenserna om ni inte lyckas?',
-	'q6' : 'Har ni några tankar på hur ni kan åtgärda detta (finns plan? budget=..)'
-}
+Questions = [
+    'Hur viktigt är det att: Säkerställa att era fordon ger ett intryck som ligger i linje med ert varumärke? \n skala 1-5',
+	'Hur viktigt är det att: Leva upp till våra kunders miljökrav på sina leverantörers fordonspark? \n skala 1-5',
+    'Hur viktigt är det att: Anpassa fordonsparken till vår miljöambition? \n skala 1-5',
+	'Vad är det specifikt ni inte är nöjda med? (t.ex tid, kostnad, kvalitet)?',
+    'På vilket sätt är detta viktigt - vad är konsekvenserna om ni inte lyckas?',
+	'Har ni några tankar på hur ni kan åtgärda detta (finns plan? budget=..)'
+]
 
 #
 #	Detta är route-filen som exekverar olika saker beroende på klientens GET-request
