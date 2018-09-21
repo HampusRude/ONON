@@ -61,8 +61,8 @@ def statistics():
 	climat_important = Responses.query.filter_by(q2=5).all()
 	share_climat_important = int((len(climat_important)/len(all_answers))*100)
 
-	#return render_template('statistics.html', title='Kundstatistik', brand_not_important=share_brand_not_important, brand_important=share_brand_important, climat_not_important=share_climat_not_important, climat_important=share_climat_important)
-	return render_template('statistics2.html')
+	return render_template('statistics.html', title='Kundstatistik', brand_not_important=share_brand_not_important, brand_important=share_brand_important, climat_not_important=share_climat_not_important, climat_important=share_climat_important)
+	#return render_template('statistics2.html')
 
 # Denna sida är för att kunna skapa ett konto på servern
 @app.route("/register", methods=['GET', 'POST']) # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
