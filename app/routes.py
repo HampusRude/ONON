@@ -41,7 +41,7 @@ def kund():
 def responses(foretag):
 	responses = Responses.query.filter_by(company=foretag).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
-	return render_template('responses.html', title=foretag, responses=res, questions=Questions) # Renderar responses.html, res = lista med svar, Questions = hårkodad lista med respektive fråga, form=Responseform som är skapad i Forms.py
+	return render_template('responses.html', title=foretag, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
 
 @app.route("/statistics")
