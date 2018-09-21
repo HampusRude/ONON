@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+<!-- <head> content för denna sida-->
+<!-- Script som sköter utseendet på tabellerna-->
+{% block head%}
+	<script>
+	window.onload = function () {
+
+	//Better to construct options first and then pass it as a parameter
+	var options = {
+		animationEnabled: true,
+		axisY: {
+			tickThickness: 0,
+			lineThickness: 0,
+			valueFormatString: " ",
+			gridThickness: 0                    
+		},
+		axisX: {
+			tickThickness: 0,
+			lineThickness: 0,
+			labelFontSize: 18,
+			labelFontColor: "black"				
+		},
+		data: [{
+			indexLabelFontSize: 26,
+			toolTipContent: "<span style=\"color:#62C9C3\">{indexLabel}:</span> <span style=\"color:#CD853F\"><strong>{y}</strong></span>",
+			indexLabelPlacement: "inside",
+			indexLabelFontColor: "white",
+			indexLabelFontWeight: 600,
+			indexLabelFontFamily: "Verdana",
+			color: "#62C9C3",
+			type: "bar",
+			dataPoints: [
+				{ y: {{ brand_not_important }}, label: "{{ brand_not_important }}%", indexLabel: "Ej viktigt med varumärke" },
+				{ y: {{ brand_important }}, label: "{{ brand_important }}%", indexLabel: "Viktigt med varumärke" },
+				{ y: {{ climat_important }}, label: "{{ climat_important }}%", indexLabel: "Viktigt med miljö" },
+				{ y: {{ climat_not_important }}, label: "{{ climat_not_important }}%", indexLabel: "Ej viktigt med miljö" },
+
+
+			]
+		}]
+	};
+
+	$("#chartContainer").CanvasJSChart(options);
+	}
+	</script>
+{% endblock head %}
+
+{% block content %}
+<h1>Nedan är statistik från alla kundprofiler inom VW-Group</h1>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+
+<!-- Ytterligare JavaScript för att få statistikbilden att fungera väl -->
+{% block body %}
+	<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+{% endblock body %}
+
+{% endblock content%}

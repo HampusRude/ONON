@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- Knapp för att gå tillbaks-->
+<button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button> 
+<p></p>
+
+{% for i in range(6) %}
+	<article class="media content-section">
+	  <div class="media-body">
+	    <div class="article-metadata">
+	      <b><big>Fråga {{ i+1 }}</big><p>{{ questions[i] }}</p></b>
+	    </div>
+	    <a>{{ responses[i] }}</a>
+	  </div>
+	</article>
+{% endfor %}
+{% endblock content%}
