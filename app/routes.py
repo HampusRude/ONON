@@ -112,17 +112,6 @@ def logout():
 @app.route("/account", methods=['GET', 'POST'])
 @login_required		# Går bara att accessa om du är inloggad 
 def account():
-	'''
-	form = UpdateAccountForm()	# Form från forms.py
-	if form.validate_on_submit(): # OM SubmitField klickas, kör nedan
-		current_user.email = form.email.data # Skriver över current_user.email med det som användaren skrivit in i UpdateAccountForm()
-		db.session.commit()	
-		flash('Din email har uppdaterats', 'success')
-		return redirect(url_for('account'))
-	elif request.method == 'GET':		# Den inloggades email står redan färdigskrivet i fältet
-		form.email.data = current_user.email
-	return render_template('account.html', title='Account', form=form)
-	'''
 	form = UpdateAccountForm()
 	if form.validate_on_submit():
 		print(current_user)
