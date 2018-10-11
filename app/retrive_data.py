@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-
+import requests
+import json
+import pickle
+import psycopg2
+from q_dict import question_id_dict
 
 ### Saves a python object to external file
 def save_obj(obj, file_name):
@@ -70,7 +74,7 @@ def get_all_responses(data, string_dict):
 
 ### Converts json data of strings to a manageable dictionary
 def get_string_dict(data):
-    description = {}
+    description = {}    # Initilise an empty dictionary, will be filled up by get_all_strings
     weight = {}
     get_all_strings(data, "id", description, weight)    # Recursive function that finds all strings with key = 'id'
     for key in description:
@@ -157,8 +161,11 @@ def main():
     # Retrieve the responses from SurveyMonkey
     access_token = "CFuvukyd7PyT8d8NDMhT9ofBcsgJ8FOmKZl2Wqmc0E5jzmCCDMjhvSzuKlHUYmz0PCXep2Ze1e1wGKLH4ljAL7TDLc1zfv1V.FQUPoJUBKWuQHqHsi6Y9XCCHsljjkJq"
     responses_url = "https://api.surveymonkey.com/v3/surveys/153577588/responses/bulk"
-    responses = get_survey_data(responses_url, access_token)
-    responses_parsed = json.loads(responses.text)
+    responses = get_survey_data(responses_url, access_token)    # Retrieve data from surveymonkey
+    responses_parsed = json.loads(responses.text)               # Parse json response from server
+    print(responses_parsed)
+    print("############")
+
 
     # Retrieve details on the structure of the form on SurveyMonkey
     details_url = "https://api.surveymonkey.com/v3/surveys/153577588/details"
@@ -166,6 +173,11 @@ def main():
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
 
+    print(details_parsed)
+    print("############")
+    print(details_dict)
+
+    """
     # Connect and publish the retrieved data to the database
     db, conn = connect("survey", "postgres", "johand6c")
     response_list = get_all_responses(responses_parsed, details_dict)    # A list of dicts with individual responses
@@ -179,6 +191,7 @@ def main():
 #    print_data(res, strings)
 
     disconnect(db, conn)
+    """
 
 if __name__ == "__main__":
     main()
