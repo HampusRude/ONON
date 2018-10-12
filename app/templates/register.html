@@ -45,16 +45,32 @@
 					{% endif %}
 				</div>
 				<div>
-					{{ form.company.label(class="form-control-label") }}
-					{% if form.company.errors %}
-						{{ form.company(class="form-control form-control-lg is-invalid") }}
+					{{ form.title.label(class="form-control-label") }}
+					{% if form.title.errors %}
+						{{ form.title(class="form-control form-control-lg is-invalid") }}
 						<div class="invalid-feedback">
-							{% for errors in form.company.errors %}
+							{% for errors in form.title.errors %}
 							<span>{{ errors }}</span>
 							{% endfor %}
 						</div>
 					{% else %}
-						{{ form.company(class="form-control form-control-lg") }}
+						{{ form.title(class="form-control form-control-lg") }}
+					{% endif %}
+				</div>
+				<p></p>
+				<div class="form-group">
+					{{ form.afnum.label(class="form-control-label") }}
+					<br>
+					<small>OBS! Lämna tom om WGS chef är valt</small>
+					{% if form.afnum.errors %}
+						{{ form.afnum(class="form-control form-control-lg is-invalid") }}
+						<div class="invalid-feedback">
+							{% for errors in form.afnum.errors %}
+							<span>{{ errors }}</span>
+							{% endfor %}
+						</div>
+					{% else %}
+						{{ form.afnum(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>
 			</fieldset>
