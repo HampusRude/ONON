@@ -4,6 +4,7 @@ from app import app, bcrypt, db, mail
 from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+import random, string
 
 
 Questions = [
@@ -31,7 +32,7 @@ def home():
 @app.route("/kund")
 @login_required
 def kund():
-	responses = Responses.query.filter_by(representing=current_user.company).all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
+	responses = Responses.query.filter_by(afnum=current_user.afnum).all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 
@@ -70,18 +71,42 @@ def register():
 		return redirect(url_for('home'))# Om så är fallet, rendera home.html
 	form = RegistrationForm()			# Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
 	if form.validate_on_submit():		# OM SubmitField klickas, kör nedan
-		if form.company.data == 'VF':	# Om inte personen väljer vilket företag hen representerar körs detta
+		if form.title.data == 'VF':	# Om inte personen väljer vilket företag hen representerar körs detta
 			flash('Du måste välja vilket företag du representerar', 'danger')
 			return redirect(url_for('register'))
 		else:
-			hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt 
-			user = User(email=form.email.data, password=hashed_password, company=form.company.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
+			first_password = randomString() # Generera ett första lösenord
+			hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8') # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
+			if form.title == 'VG':
+				user = User(email=form.email.data, password=hashed_password, title=form.title.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
+			else:
+				user = User(email=form.email.data, password=hashed_password, title=form.title.data, afnum=form.afnum.data)
 			db.session.add(user)	# SQLAlchemy kommando för att adda objektet
 			db.session.commit() 	# commitar till databasen
-			flash('Konto skapat för {form.email.data}! Du kan nu logga in', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+			flash(f'Konto skapat för {form.email.data}! Du kan nu logga in', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+			send_register_email(user, first_password)
 			return redirect(url_for('login'))												# För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
 	return render_template('register.html', title='Register', form=form) # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
 
+def send_register_email(user,first_password):
+	msg = Message('Ditt konto till Behovsanalys.se', # Mail-funktion från flask_mail
+		sender='noreply@ONONAB.com',
+		recipients=[user.email])			# Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
+	# Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
+	msg.body = f'''Nedan är dina inloggningsdetaljer till Behovsanalys.se:
+	
+Emailadress: {user.email}
+Lösenord: {first_password}
+
+Klicka på länken nedan för att logga in och byta lösenord:
+{url_for('account', _external=True)}
+'''
+	mail.send(msg)	# Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
+
+def randomString():
+	length = 6
+	letters = string.ascii_lowercase
+	return ''.join(random.choice(letters) for i in range(length))
 
 @app.route("/login", methods=['GET', 'POST']) # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
 def login():
@@ -119,7 +144,7 @@ def account():
 			current_user.password = new_hashed_password
 			db.session.commit()
 			flash('Ditt lösenord har uppdaterats', 'success')
-			return redirect(url_for('account'))
+			return redirect(url_for('home'))
 		else:
 			flash('Fel lösenord angivet, försök igen', 'danger')
 	return render_template('account.html', title='Account', form=form)
@@ -151,7 +176,6 @@ def send_reset_email(user):
 '''
 
 	mail.send(msg)	# Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
-
 
 
 # Sida som du kommer till när du har klickat på länken som du får i mailet när du har glömt lösenordet

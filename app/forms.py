@@ -18,9 +18,8 @@ from app.models import User
 class RegistrationForm(FlaskForm):
 	# Input fields and requirements
 	email = StringField('E-mail', validators=[DataRequired(), Email()])
-	password = PasswordField('Lösenord', validators=[DataRequired()])
-	confirm_password = PasswordField('Bekräfta lösenord',
-		validators=[DataRequired(), EqualTo('password')])
+	#password = PasswordField('Lösenord', validators=[DataRequired()])
+	#confirm_password = PasswordField('Bekräfta lösenord', validators=[DataRequired(), EqualTo('password')])
 	title = SelectField('Titel', choices=[('VF', 'Välj företag'),('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
 	afnum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
