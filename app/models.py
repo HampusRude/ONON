@@ -15,7 +15,8 @@ class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)	# Unikt för varje användare, används när man skapar unika "reset-password-tokens"
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	password = db.Column(db.String(60), nullable=False)
-	company = db.Column(db.String(2), nullable=False) # Vilket företag som användaren arbetar på. Detta för att man bara ska kunna få upp sina unika kunder och inte andras
+	title = db.Column(db.String(2), nullable=False)
+	afnum = db.Column(db.String(5))
 
 	# Metod för att skapa en token kopplat till en specifik användare om denne har glömt sitt lösenord. Detta gör när man är inne på /reset_password
 	def get_reset_token(self, expires_sec=1800):
@@ -34,18 +35,18 @@ class User(db.Model, UserMixin):
 		return User.query.get(user_id)				# retuenerar User-objektet kopplat till användaren mha user_id
 
 	def __repr__(self):
-		return "User('{self.email}')"				# Detta är det man får tillbaks om man printar objektet. Alltså inte PW eller id, bara mailen
+		return f"User('{self.email}')"				# Detta är det man får tillbaks om man printar objektet. Alltså inte PW eller id, bara mailen
 
 
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
-	representing = db.Column(db.String(2))		
-	afnum = db.Column(db.Integer, primary_key=True)
-	company = db.Column(db.String(30), unique=True)
-	orgnum = db.Column(db.Integer, unique=True)
-	kam = db.Column(db.String(30))
-	email = db.Column(db.String(20))
-	mobil = db.Column(db.Integer)
+	date = db.Column(db.Integer)						### ÅF-information nedan
+	afnum = db.Column(db.Integer, primary_key=True)		#
+	creatorName = db.Column(db.String(20))				#
+	custOrgNum = db.Column(db.Integer, unique=True)		### Kuninformtion nedan
+	custCreatorName = db.Column(db.String(20))			#
+	custEmail = db.Column(db.String(20))				#
+	custMobile = db.String(db.String(15))				### Frågor nedan
 	q1 = db.Column(db.Integer)	#1-5
 	q2 = db.Column(db.Integer)	#1-5
 	q3 = db.Column(db.Integer)	#1-5
@@ -56,15 +57,15 @@ class Responses(db.Model, UserMixin):
 
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return "Responses('{self.afnum}', '{self.company}', '{self.orgnum}', '{self.kam}')"
+		return f"Responses('{self.afnum}', '{self.company}', '{self.orgnum}', '{self.kam}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):
 		# TODO: Iterate through the stored responses and only return the questions with not null answers
-		return [
-			self.q1,
-			self.q2,
-			self.q3,
-			self.q4,
-			self.q5,
-			self.q6]
+		return {
+			'q1': self.q1,
+			'q2': self.q2,
+			'q3': self.q3,
+			'q4': self.q4,
+			'q5': self.q5,
+			'q6': self.q6}
