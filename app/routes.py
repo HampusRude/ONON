@@ -34,7 +34,6 @@ def kund():
 	responses = Responses.query.filter_by(representing=current_user.company).all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
-
 # Denna sida visar alla svar som en kund har gett
 @app.route("/kund/<foretag>")
 @login_required
@@ -42,7 +41,6 @@ def responses(foretag):
 	responses = Responses.query.filter_by(company=foretag).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
 	return render_template('responses.html', title=foretag, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
-
 
 @app.route("/statistics")
 @login_required

@@ -4,6 +4,8 @@ import json
 import pickle
 import psycopg2
 from q_dict import question_id_dict
+from app import db
+
 
 ### Saves a python object to external file
 def save_obj(obj, file_name):
@@ -61,7 +63,8 @@ def get_all_responses(data, string_dict):
             if questions:
                 for answers in questions:
                     answer = answers.get("answers")
-                    q = answers.get("id")       # retrieves the questions id
+                    q_id = answers.get("id")       # retrieves the questions survey monkey id
+                    q = question_id_dict[q_id]
                     ans = []
                     for data in answer:
                         if data.get("text"):
@@ -144,46 +147,48 @@ def write_responses(responses, q_id_dict):
         #    db.session.commit()
         pass
 
-### Combines the response list and string dictionary to something readable to verify data
+### Combines the response list and details dictionary to something readable to verify data
 def print_data(rl, sd):
-    for response in rl: # returns a dictionary for a unique response
-        for line in response:
-            answer_id = response[line]
-            question = sd[line]
-            for i in answer_id:
-                if len(i) == 9:
-                    print("Q: " + question + " | A: " + sd[i])
-                else:
-                    print("Q: " + question + " | A: " + i)
-        print(" --- New response --- ")
+    for response in rl:         # returns a dictionary for each unique response
+        i = -7
+        for line in response:   # For each key (question id) in the dictionary of responses
+            print(" --- New response --- ")
+            i += 1
+            if line != 'response_id' and line != 'timestamp':
+                answer = response[line]
+                question = sd[line]
+                print("q" + str(i) + ": " + str(line) + " # " + str(question))
 
 def main():
-    # Retrieve the responses from SurveyMonkey
     access_token = "CFuvukyd7PyT8d8NDMhT9ofBcsgJ8FOmKZl2Wqmc0E5jzmCCDMjhvSzuKlHUYmz0PCXep2Ze1e1wGKLH4ljAL7TDLc1zfv1V.FQUPoJUBKWuQHqHsi6Y9XCCHsljjkJq"
-    responses_url = "https://api.surveymonkey.com/v3/surveys/153577588/responses/bulk"
+
+    # Retrieve the responses from SurveyMonkey
+    responses_url = "https://api.surveymonkey.com/v3/surveys/157901927/responses/bulk"
     responses = get_survey_data(responses_url, access_token)    # Retrieve data from surveymonkey
     responses_parsed = json.loads(responses.text)               # Parse json response from server
-    print(responses_parsed)
-    print("############")
-
 
     # Retrieve details on the structure of the form on SurveyMonkey
-    details_url = "https://api.surveymonkey.com/v3/surveys/153577588/details"
+    details_url = "https://api.surveymonkey.com/v3/surveys/157901927/details"
     details = get_survey_data(details_url, access_token)    # Retrieve data from surveymonkey
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
 
-    print(details_parsed)
-    print("############")
-    print(details_dict)
+    q_id_dict = question_id_dict    # question_id_dict is a global variable, this line is for clarification
+
+    response_list = get_all_responses(responses_parsed, details_dict)    # A list of dicts with individual responses
+
+    #print_data(response_list, details_dict)
+
+    for response in response_list:
+        for k in response:
+            print(str(k) + " " + str(response[k]))
+
+#    for unique_response in response_list:
+#        print(unique_response)
 
     """
     # Connect and publish the retrieved data to the database
     db, conn = connect("survey", "postgres", "johand6c")
-    response_list = get_all_responses(responses_parsed, details_dict)    # A list of dicts with individual responses
-    print(response_list)
-
-    q_id_dict = question_id_dict    # question_id_dict is a global variable, this line is for clarification
 
     write_responses(db, response_list, q_id_dict)
     print("Responses written to database")
