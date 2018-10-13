@@ -40,10 +40,11 @@ class User(db.Model, UserMixin):
 
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
-	date = db.Column(db.Integer)						### ÅF-information nedan
-	afnum = db.Column(db.Integer, primary_key=True)		#
+	id = db.Column(db.Integer, primary_key=True)
+	date = db.Column(db.String(10))						### ÅF-information nedan
+	afnum = db.Column(db.String(10))					#
 	creatorName = db.Column(db.String(20))				#
-	custOrgNum = db.Column(db.Integer, unique=True)		### Kuninformtion nedan
+	custOrgNum = db.Column(db.String(10), unique=True)	### Kuninformtion nedan
 	custCreatorName = db.Column(db.String(20))			#
 	custEmail = db.Column(db.String(20))				#
 	custMobile = db.String(db.String(15))				### Frågor nedan
@@ -57,7 +58,7 @@ class Responses(db.Model, UserMixin):
 
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return f"Responses('{self.afnum}', '{self.company}', '{self.orgnum}', '{self.kam}')"
+		return f"Responses('{self.afnum}', '{self.creatonName}', '{self.custOrgNum}', '{self.custEmail}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):
