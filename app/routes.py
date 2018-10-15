@@ -39,12 +39,12 @@ def kund():
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 # Denna sida visar alla svar som en kund har gett
-@app.route("/kund/<foretag>")
+@app.route("/kund/<company>")
 @login_required
-def responses(foretag):
-	responses = Responses.query.filter_by(company=foretag).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
+def responses(company):
+	responses = Responses.query.filter_by(custName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
-	return render_template('responses.html', title=foretag, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+	return render_template('responses.html', title=company, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
 @app.route("/statistics")
 @login_required
@@ -81,10 +81,14 @@ def register():
 			if form.title == 'VG':
 				user = User(email=form.email.data, password=hashed_password, title=form.title.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
 			else:
-				user = User(email=form.email.data, password=hashed_password, title=form.title.data, afnum=form.afnum.data)
+				if form.afnum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
+					flash(f'Du måste ange ÅF-nummer för en återförsäljare','danger')
+					return redirect(url_for('register'))
+				else:
+					user = User(email=form.email.data, password=hashed_password, title=form.title.data, afnum=form.afnum.data)
 			db.session.add(user)	# SQLAlchemy kommando för att adda objektet
 			db.session.commit() 	# commitar till databasen
-			flash(f'Konto skapat för {form.email.data}! Du kan nu logga in', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+			flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
 			send_register_email(user, first_password)
 			return redirect(url_for('login'))												# För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
 	return render_template('register.html', title='Register', form=form) # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
