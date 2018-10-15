@@ -42,7 +42,7 @@ def kund():
 @app.route("/kund/<company>")
 @login_required
 def responses(company):
-	responses = Responses.query.filter_by(custCompName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
+    responses = Responses.query.filter_by(custCompName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
 	return render_template('responses.html', title=company, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
