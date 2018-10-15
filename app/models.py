@@ -44,8 +44,8 @@ class Responses(db.Model, UserMixin):
 	date = db.Column(db.String(10))						### ÅF-information nedan
 	afnum = db.Column(db.String(10))					#
 	creatorName = db.Column(db.String(20))				#
-	custOrgNum = db.Column(db.String(10), unique=True)	### Kuninformtion nedan
-	custCreatorName = db.Column(db.String(20))			#
+	custOrgNum = db.Column(db.String(15), unique=True)	### Kuninformtion nedan
+	custName = db.Column(db.String(20))			#
 	custEmail = db.Column(db.String(20))				#
 	custMobile = db.String(db.String(15))				### Frågor nedan
 	q1 = db.Column(db.Integer)	#1-5
@@ -58,7 +58,7 @@ class Responses(db.Model, UserMixin):
 
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return f"Responses('{self.afnum}', '{self.creatonName}', '{self.custOrgNum}', '{self.custEmail}')"
+		return f"Responses('{self.afnum}', '{self.creatorName}', '{self.custOrgNum}', '{self.custEmail}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):

@@ -32,7 +32,10 @@ def home():
 @app.route("/kund")
 @login_required
 def kund():
-	responses = Responses.query.filter_by(afnum=current_user.afnum).all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
+	if current_user.title == 'VG':
+		responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
+	else:
+		responses = Responses.query.filter_by(afnum=current_user.afnum)
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 # Denna sida visar alla svar som en kund har gett
