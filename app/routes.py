@@ -35,7 +35,7 @@ def kund():
 	if current_user.title == 'VG':
 		responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
 	else:
-		responses = Responses.query.filter_by(afNum=current_user.aFnum)
+		responses = Responses.query.filter_by(afNum=current_user.afNum)
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 # Denna sida visar alla svar som en kund har gett
@@ -86,7 +86,7 @@ def register():
 					flash(f'Du måste ange ÅF-nummer för en återförsäljare','danger')
 					return redirect(url_for('register'))
 				else:
-					user = User(email=form.email.data, password=hashed_password, title=form.title.data, aFnum=form.aFnum.data)
+					user = User(email=form.email.data, password=hashed_password, title=form.title.data, afNum=form.afNum.data)
 			db.session.add(user)	# SQLAlchemy kommando för att adda objektet
 			db.session.commit() 	# commitar till databasen
 			flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick

@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	password = db.Column(db.String(60), nullable=False)
 	title = db.Column(db.String(2), nullable=False)
-	afnum = db.Column(db.String(5))
+	afNum = db.Column(db.String(5))
 
 	# Metod för att skapa en token kopplat till en specifik användare om denne har glömt sitt lösenord. Detta gör när man är inne på /reset_password
 	def get_reset_token(self, expires_sec=1800):
