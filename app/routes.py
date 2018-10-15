@@ -73,15 +73,16 @@ def register():
 	form = RegistrationForm()			# Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
 	if form.validate_on_submit():		# OM SubmitField klickas, kör nedan
 		if form.title.data == 'VF':	# Om inte personen väljer vilket företag hen representerar körs detta
-			flash('Du måste välja vilket företag du representerar', 'danger')
+			flash('Du måste välja vilket en titel för användaren', 'danger')
 			return redirect(url_for('register'))
 		else:
 			first_password = randomString() # Generera ett första lösenord
 			hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8') # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
-			if form.title == 'VG':
+			print('LÖSENORD TILL ' + form.email.data + ': ' + first_password)
+			if form.title.data == 'VG':
 				user = User(email=form.email.data, password=hashed_password, title=form.title.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
 			else:
-				if form.aFnum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
+				if form.afNum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
 					flash(f'Du måste ange ÅF-nummer för en återförsäljare','danger')
 					return redirect(url_for('register'))
 				else:

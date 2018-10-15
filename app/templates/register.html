@@ -33,18 +33,18 @@
 				</div>
 				<p></p>
 				<div class="form-group">
-					{{ form.afnum.label(class="form-control-label") }}
+					{{ form.afNum.label(class="form-control-label") }}
 					<br>
 					<small>OBS! Lämna tom om WGS chef är valt</small>
-					{% if form.afnum.errors %}
-						{{ form.afnum(class="form-control form-control-lg is-invalid") }}
+					{% if form.afNum.errors %}
+						{{ form.afNum(class="form-control form-control-lg is-invalid") }}
 						<div class="invalid-feedback">
-							{% for errors in form.afnum.errors %}
+							{% for errors in form.afNum.errors %}
 							<span>{{ errors }}</span>
 							{% endfor %}
 						</div>
 					{% else %}
-						{{ form.afnum(class="form-control form-control-lg") }}
+						{{ form.afNum(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>
 			</fieldset>
