@@ -12,12 +12,11 @@ def load_user(user_id):
 #
 
 class User(db.Model, UserMixin):
-	__abstract__ = True
 	id = db.Column(db.Integer, primary_key=True)	# Unikt för varje användare, används när man skapar unika "reset-password-tokens"
 	email = db.Column(db.String(120), unique=True, nullable=False)
 	password = db.Column(db.String(60), nullable=False)
 	title = db.Column(db.String(2), nullable=False)
-	afNum = db.Column(db.String(5))
+	afnum = db.Column(db.String(5))
 
 	# Metod för att skapa en token kopplat till en specifik användare om denne har glömt sitt lösenord. Detta gör när man är inne på /reset_password
 	def get_reset_token(self, expires_sec=1800):
@@ -41,29 +40,27 @@ class User(db.Model, UserMixin):
 
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
-	__abstract__ = True
-	response_id = db.Column(db.Integer, primary_key = True)
-	timestamp = db.Column(db.String(150))
-	date = db.Column(db.String(150))
+	response_id = db.Column(db.Integer, primary_key=True)
+	timestamp = db.Column(db.String(20))				### ÅF-information nedan
+	date = db.Column(db.String(10))					#
 	afNum = db.Column(db.String(150))
-	creator = db.Column(db.String(150))
-	custOrgNum = db.Column(db.String(150))
-	custCompName = db.Column(db.String(150))
-	custCompContact = db.Column(db.String(150))
-	custCompEmail = db.Column(db.String(150))
-	custCompPhone = db.Column(db.String(150))
-	q1 = db.Column(db.String(150))
-	q2 = db.Column(db.String(150))
-	q3 = db.Column(db.String(150))
-	q4 = db.Column(db.String(150))
-	q5 = db.Column(db.String(150))
-	q6 = db.Column(db.String(150))
+	creator = db.Column(db.String(20))				#
+	custOrgNum = db.Column(db.String(15), unique=True)	### Kuninformtion nedan
+	custCompName = db.Column(db.String(20))
+	custCompContact = db.Column(db.String(20))
+	custCompEmail = db.Column(db.String(20))				#
+	custCompPhone = db.String(db.String(15))				### Frågor nedan
+	q1 = db.Column(db.Integer)	#1-5
+	q2 = db.Column(db.Integer)	#1-5
+	q3 = db.Column(db.Integer)	#1-5
+	q4 = db.Column(db.String(150))	#Öppen
+	q5 = db.Column(db.String(150))	#Öppen
+	q6 = db.Column(db.String(150))	#Öppen
 	q7 = db.Column(db.String(150))
 	q8 = db.Column(db.String(150))
 	q9 = db.Column(db.String(150))
 	q10 = db.Column(db.String(150))
 	q11 = db.Column(db.String(150))
-	q11_1 = db.Column(db.String(150))
 	q12 = db.Column(db.String(150))
 	q13 = db.Column(db.String(150))
 	q14 = db.Column(db.String(150))
@@ -182,10 +179,9 @@ class Responses(db.Model, UserMixin):
 	q127 = db.Column(db.String(150))
 	q128 = db.Column(db.String(150))
 
-
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return f"Responses('{self.afNum}', '{self.custCompName}', '{self.custOrgNum}', '{self.date}')"
+		return f"Responses('{self.afNum}', '{self.creator}', '{self.custCompName}', '{self.custCompContact}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):
