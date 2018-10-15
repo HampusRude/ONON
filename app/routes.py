@@ -35,14 +35,14 @@ def kund():
 	if current_user.title == 'VG':
 		responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
 	else:
-		responses = Responses.query.filter_by(afnum=current_user.afnum)
+		responses = Responses.query.filter_by(afNum=current_user.aFnum)
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 # Denna sida visar alla svar som en kund har gett
 @app.route("/kund/<company>")
 @login_required
 def responses(company):
-	responses = Responses.query.filter_by(custName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
+	responses = Responses.query.filter_by(custCompName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
 	return render_template('responses.html', title=company, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
@@ -81,11 +81,11 @@ def register():
 			if form.title == 'VG':
 				user = User(email=form.email.data, password=hashed_password, title=form.title.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
 			else:
-				if form.afnum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
+				if form.aFnum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
 					flash(f'Du måste ange ÅF-nummer för en återförsäljare','danger')
 					return redirect(url_for('register'))
 				else:
-					user = User(email=form.email.data, password=hashed_password, title=form.title.data, afnum=form.afnum.data)
+					user = User(email=form.email.data, password=hashed_password, title=form.title.data, aFnum=form.aFnum.data)
 			db.session.add(user)	# SQLAlchemy kommando för att adda objektet
 			db.session.commit() 	# commitar till databasen
 			flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren', 'success')		# Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick

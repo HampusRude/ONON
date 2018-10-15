@@ -21,7 +21,7 @@ class RegistrationForm(FlaskForm):
 	#password = PasswordField('Lösenord', validators=[DataRequired()])
 	#confirm_password = PasswordField('Bekräfta lösenord', validators=[DataRequired(), EqualTo('password')])
 	title = SelectField('Titel', choices=[('VF', 'Välj företag'),('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
-	afnum = StringField('ÅF-nummer')
+	afNum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
 
 	# Metod som används för att kolla att det inte redan finns en email i databasen som användare skriver i

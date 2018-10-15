@@ -51,7 +51,7 @@
   <div id="myDropdown" class="dropdown-content">
     <input type="text" placeholder="Sök.." id="myInput" onkeyup="filterFunction()">
     {% for response in responses %}
-    	<a href="kund/{{response.custName}}">{{response.custName}}</a>
+    	<a href="kund/{{response.custCompName}}">{{response.custCompName}}</a>
     {% endfor %}
   </div>
 </div>
