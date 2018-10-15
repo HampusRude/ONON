@@ -2,11 +2,11 @@ question_id_dict = {
     '153515210':'date ', # Datum för genomgången
     '153515905':'afNum', # ÅF-nummer
     '153518228':'creator', # Skaparen av denna analys (ditt namn)
-    '153519605':'orgNum', # Org. nummer
-    '158321490':'CompName', # Företagets namn:
-    '158321564':'CompContact', # Kontaktpersonens Namn:
-    '158321689':'CompEmail', # Kontaktpersonens mailadress:
-    '158321819':'CompPhone', # Kontaktpersonens telefonnummer:
+    '153519605':'custOrgNum', # Org. nummer
+    '158321490':'custCompName', # Företagets namn:
+    '158321564':'custCompContact', # Kontaktpersonens Namn:
+    '158321689':'custCompEmail', # Kontaktpersonens mailadress:
+    '158321819':'custCompPhone', # Kontaktpersonens telefonnummer:
     '141491927':'q1', # Hur vill ni att <span style="text-decoration: underline;">era</span> kunder ska uppfatta ert val av bilar?
     '141247144':'q2', # Hur viktigt är det att bilarna matchar ert varumärke? (På en femgradig skala där 1 = "Inte alls viktigt" till 5 = "mycket viktigt")
     '141503254':'q3', # Vad är er image och vad vill ni kommunicera med bilarna?
@@ -18,7 +18,7 @@ question_id_dict = {
     '141561121':'q9', # Har ni några mål eller krav kring bilarnas miljöpåverkan? (Tips: Co2, kolväten, partiklar, dubbdäck)
     '141247180':'q10', # Hur nöjda är ni med nuvarande vagnparks miljöpåverkan? ( 5 = "mycket nöjda")
     '141567830':'q11', # Vad är det ni inte är nöjda med och har ni några planer på att åtgärda detta?
-    '141508263':'q11-1', # Vad är det ni inte är nöjda med med och planerar ni att åtgärda detta?
+    '141508263':'q11_1', # Vad är det ni inte är nöjda med med och planerar ni att åtgärda detta?
     '141247178':'q12', # Hur viktigt är de för er att ha attraktiva tjänste- och förmånsbilar i rekryteringssyfte? ( 5 = "mycket viktigt")
     '143320255':'q13', # Vad är er arbetsgivarerimage och vad vill ni att era bilar och bilpolicy ska kommuicera till potentiella medarbetare?
     '143320637':'q14', # Vilka roller är svår-rekryterade och hur viktigt är det att kandidaterna inte tackar nej till era jobberbjudanden?

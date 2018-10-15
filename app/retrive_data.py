@@ -3,8 +3,9 @@ import requests
 import json
 import pickle
 import psycopg2
-from q_dict import question_id_dict
+from app.q_dict import question_id_dict
 from app import db
+from app.models import User, Responses
 
 
 ### Saves a python object to external file
@@ -179,14 +180,28 @@ def main():
 
     #print_data(response_list, details_dict)
 
+    res_1 = response_list[0]
+    res_id = res_1["response_id"]
+    obj = Responses(**res_1)
+    db.session.add(obj)
+    db.session.commit()
+"""
     for response in response_list:
+        obj = Responses(**response)
+        db.session.add(obj)
         for k in response:
             print(str(k) + " " + str(response[k]))
+    db.session.commit()
 
-#    for unique_response in response_list:
-#        print(unique_response)
+    try:
+        num_rows_deleted = db.session.query(Responses).delete()
+        db.session.commit()
+        print(num_rows_deleted)
+    except:
+        db.session.rollback()
+"""
 
-    """
+"""
     # Connect and publish the retrieved data to the database
     db, conn = connect("survey", "postgres", "johand6c")
 
@@ -196,7 +211,7 @@ def main():
 #    print_data(res, strings)
 
     disconnect(db, conn)
-    """
+"""
 
 if __name__ == "__main__":
     main()
