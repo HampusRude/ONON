@@ -61,6 +61,7 @@ class Responses(db.Model, UserMixin):
 	q9 = db.Column(db.String(150))
 	q10 = db.Column(db.String(150))
 	q11 = db.Column(db.String(150))
+	q11_1 = db.Column(db.String(150))
 	q12 = db.Column(db.String(150))
 	q13 = db.Column(db.String(150))
 	q14 = db.Column(db.String(150))
