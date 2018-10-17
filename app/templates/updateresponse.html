@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+	<form method="POST" action="">
+		{{ form.hidden_tag() }}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">Logga in</legend>
+			<div class="form-group">
+				{{ form.updated_response.label(class="form-control-label") }}
+				{% if form.updated_response.errors %}
+					{{ form.updated_response(class="form-control form-control-lg is-invalid") }}
+					<div class="invalid-feedback">
+						{% for errors in form.updated_response.errors %}
+						<span>{{ errors }}</span>
+						{% endfor %}
+					</div>
+				{% else %}
+					{{ form.updated_response(class="form-control form-control-lg") }}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div class="form-group">
+			{{ form.submit(class ="btn btn-outline-info") }}
+					<small class="text-muted ml-2">
+			<a href="{{ url_for('reset_request') }}">Glömt lösenordet?</a>
+		</small>
+		</div>
+	</form>
+</div>
+{% endblock content%}

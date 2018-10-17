@@ -41,15 +41,15 @@ class User(db.Model, UserMixin):
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
 	response_id = db.Column(db.Integer, primary_key=True)
-	timestamp = db.Column(db.String(20))				### ÅF-information nedan
-	date = db.Column(db.String(10))					#
+	timestamp = db.Column(db.String(20))
+	date = db.Column(db.String(10))
 	afNum = db.Column(db.String(150))
-	creator = db.Column(db.String(20))				#
-	custOrgNum = db.Column(db.String(15), unique=True)	### Kuninformtion nedan
+	creator = db.Column(db.String(20))
+	custOrgNum = db.Column(db.String(15), unique=True)
 	custCompName = db.Column(db.String(20))
 	custCompContact = db.Column(db.String(20))
-	custCompEmail = db.Column(db.String(20))				#
-	custCompPhone = db.String(db.String(15))				### Frågor nedan
+	custCompEmail = db.Column(db.String(20))
+	custCompPhone = db.String(db.String(15))
 	q1 = db.Column(db.Integer)	#1-5
 	q2 = db.Column(db.Integer)	#1-5
 	q3 = db.Column(db.Integer)	#1-5

@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
-from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
+from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, UpdateResponseForm
 from app import app, bcrypt, db, mail
 from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
@@ -44,7 +44,21 @@ def kund():
 def responses(company):
 	responses = Responses.query.filter_by(custCompName=company).first() # Hämtar alla kolumner kopplat till ett företaget man klickat på
 	res = responses.return_responses()		# Funktion i DB-objektet som returnerar ett dictionary med alla svar för att det skall gå att iterera igenom i HTML-dokumentet
-	return render_template('responses.html', title=company, responses=res, questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+	response_id = responses.response_id
+	return render_template('responses.html', title=company, responses=res, questions=Questions, resId=response_id) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+
+@app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
+@login_required
+def updateResponse(responseId, res):
+	form = UpdateResponseForm()
+	responseForm = Responses.query.filter_by(response_id=responseId).first()
+	response = getattr(responseForm, res)
+	if form.validate_on_submit():
+		setattr(responseForm, res, form.updated_response.data) # Ändrar innehåll i objectet
+		db.session.commit() # Commitar ändringen till databasen
+		flash(f'Svar för fråga {res} uppdaterades' , 'success')
+	return render_template('updateresponse.html', response=response, form=form)
+
 
 @app.route("/statistics")
 @login_required

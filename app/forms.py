@@ -20,7 +20,7 @@ class RegistrationForm(FlaskForm):
 	email = StringField('E-mail', validators=[DataRequired(), Email()])
 	#password = PasswordField('Lösenord', validators=[DataRequired()])
 	#confirm_password = PasswordField('Bekräfta lösenord', validators=[DataRequired(), EqualTo('password')])
-	title = SelectField('Titel', choices=[('VF', 'Välj företag'),('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
+	title = SelectField('Titel', choices=[('VF', 'Välj företag'), ('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
 	afNum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
 
@@ -30,7 +30,6 @@ class RegistrationForm(FlaskForm):
 		email = User.query.filter_by(email=email.data).first()
 		if email:
 			raise ValidationError('Mailadressen finns redan. Glömt Lösenordet? Annars välj en annan.')
-
 
 # Form för att logga in, påminner lite om RegistrationForm
 # Input checkas mot databasen först när man använder sig av Formen i routes.py
@@ -76,6 +75,6 @@ class ResetPasswordForm(FlaskForm):
 	submit = SubmitField('Återställ lösenord')
 
 # Ingenting som används i dagsläget
-class ChangeResponseForm(FlaskForm):
+class UpdateResponseForm(FlaskForm):
 	updated_response = StringField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
