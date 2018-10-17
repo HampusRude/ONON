@@ -54,8 +54,9 @@ def updateResponse(responseId, res):
 	responseForm = Responses.query.filter_by(response_id=responseId).first()
 	response = getattr(responseForm, res)
 	if form.validate_on_submit():
-		setattr(responseForm, res, form.updated_response.data) # Ändrar innehåll i objectet
-		db.session.commit() # Commitar ändringen till databasen
+		# TODO Lägg till felhantering här samt redirecta användaren till föregående sida
+		setattr(responseForm, res, form.updated_response.data) 	# Ändrar innehåll i objectet
+		db.session.commit() 									# Commitar ändringen till databasen
 		flash(f'Svar för fråga {res} uppdaterades' , 'success')
 	return render_template('updateresponse.html', response=response, form=form)
 
