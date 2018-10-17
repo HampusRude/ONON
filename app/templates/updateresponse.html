@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
+<button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
+<p></p>
 <div class="content-section">
 	<form method="POST" action="">
 		{{ form.hidden_tag() }}
 		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">Logga in</legend>
+			<legend class="border-bottom mb-4">Ändra svar</legend>
 			<div class="form-group">
 				{{ form.updated_response.label(class="form-control-label") }}
 				{% if form.updated_response.errors %}
@@ -19,6 +21,9 @@
 				{% endif %}
 			</div>
 		</fieldset>
+		<div class="form-group">
+				{{ form.submit(class="btn btn-outline-info") }}
+		</div>
 	</form>
 </div>
 {% endblock content%}

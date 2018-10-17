@@ -58,6 +58,9 @@ def updateResponse(responseId, res):
 		setattr(responseForm, res, form.updated_response.data) 	# Ändrar innehåll i objectet
 		db.session.commit() 									# Commitar ändringen till databasen
 		flash(f'Svar för fråga {res} uppdaterades' , 'success')
+		return redirect(url_for('responses', company=responseForm.custCompName))
+	elif request.method == 'GET':			# Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
+		form.updated_response.data = response	# Då lägger vi in det som finns i response i textfältet
 	return render_template('updateresponse.html', response=response, form=form)
 
 
