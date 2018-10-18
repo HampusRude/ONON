@@ -9,9 +9,11 @@
 {% block content %}
 <!-- Knapp för att gå tillbaks-->
 <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
+
 <p></p>
-<h4>Klicka på ett svar för att ändra innehållet</h4>
+<h1>{{resObject.custCompName}}</h1>
 <p></p>
+
 {% for i in range(6) %}
 	<article class="media content-section">
 	  <div class="media-body">
@@ -19,7 +21,7 @@
 			<b><big>Fråga {{ i+1 }}</big>
 			  <p>{{ questions[i] }}</p></b>
 	    </div>
-	    <a href="{{resId}}/q{{i+1}}">{{ responses[i] }}</a>
+	    <a href="{{resObject.response_id}}/q{{i+1}}">{{ responses[i] }}</a>
 	  </div>
 	</article>
 {% endfor %}

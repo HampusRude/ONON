@@ -37,7 +37,6 @@ class User(db.Model, UserMixin):
 	def __repr__(self):
 		return f"User('{self.email}')"				# Detta är det man får tillbaks om man printar objektet. Alltså inte PW eller id, bara mailen
 
-
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
 	response_id = db.Column(db.Integer, primary_key=True)
