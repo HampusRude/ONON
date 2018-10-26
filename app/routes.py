@@ -55,7 +55,7 @@ def updateResponse(responseId, res):
 		# TODO Lägg till felhantering här samt redirecta användaren till föregående sida
 		setattr(responseForm, res, form.updated_response.data) 	# Ändrar innehåll i objectet
 		db.session.commit() 									# Commitar ändringen till databasen
-		flash(f'Svar för fråga {res} uppdaterades' , 'success')
+		flash(f'Svar för fråga {res.strip("q")} uppdaterades' , 'success')
 		return redirect(url_for('responses', company=responseForm.custCompName))
 	elif request.method == 'GET':			# Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
 		form.updated_response.data = response	# Då lägger vi in det som finns i response i textfältet
@@ -193,7 +193,7 @@ def send_reset_email(user):
 		sender='noreply@ONONAB.com', 
 		recipients=[user.email])			# Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
 	# Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
-	msg.body = '''Klicka på följande länk för att återställa ditt lösenord:
+	msg.body = f'''Klicka på följande länk för att återställa ditt lösenord:
 {url_for('reset_token', token=token, _external=True)}
 '''
 

@@ -50,13 +50,6 @@ class UpdateAccountForm(FlaskForm):
 	confirm_password = PasswordField('Konfirmera nytt lösenord', validators=[DataRequired(), EqualTo('new_password')])
 	submit = SubmitField('Uppdatera lösenord')
 
-	'''
-	def validate_email(self, email):
-		if email.data != current_user.email:
-			email = User.query.filter_by(email=email.data).first()
-			if email:
-				raise ValidationError('Mailadressen finns redan. Välj en annan.')
-	'''
 class RequestResetForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	submit = SubmitField('Skicka lösonordsåterställning')
