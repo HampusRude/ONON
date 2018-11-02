@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 
+# TODO: Kolla videon om packeging igen
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'c67a60abf8486349a4d5ad912aaf0d1f'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
