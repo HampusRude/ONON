@@ -4,57 +4,40 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Selec
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models import User
 
-#
-# Varje sida man kommer in på (förutom just förstasidan) har någon form av "Form"
-# Form = det som vi fyller mittenpartiet med i våra HTML-dokument 
-# RegistrationForm innehåller exempelvis i sin ruta: 
-# 		- Stringfield för email
-#		- PasswordField för password
-#		- PasswordField för confirm password
-# 		- SubmitField som är knappen man klickar på när man har fyllt i alla fields
-#
-
 # Form för registrering av användarkonto på hemsidan
+# Lösenord självgenererasi routes.py och skickas till det som skrivs in i email nedan
 class RegistrationForm(FlaskForm):
-	# Input fields and requirements
 	email = StringField('E-mail', validators=[DataRequired(), Email()])
-	#password = PasswordField('Lösenord', validators=[DataRequired()])
-	#confirm_password = PasswordField('Bekräfta lösenord', validators=[DataRequired(), EqualTo('password')])
 	title = SelectField('Titel', choices=[('VF', 'Välj företag'), ('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
 	afNum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
 
-	# Metod som används för att kolla att det inte redan finns en email i databasen som användare skriver i
-	# Metodanropet görs när den används i routes
+	# Kontrollera om email-adressen redan finns i databasen
 	def validate_email(self, email):
 		email = User.query.filter_by(email=email.data).first()
 		if email:
 			raise ValidationError('Mailadressen finns redan. Glömt Lösenordet? Annars välj en annan.')
 
-# Form för att logga in, påminner lite om RegistrationForm
-# Input checkas mot databasen först när man använder sig av Formen i routes.py
+# Form som används för att ta emot input när en användare loggar in
 class LoginForm(FlaskForm):
-	# Input fields and requirements
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Lösenord', validators=[DataRequired()])
 	remember = BooleanField('Kom igåg mig')
 	submit = SubmitField('Logga in')
 
-
 # Form för att uppdatera kontoinformation
 class UpdateAccountForm(FlaskForm):
-	# Input fields and requirements
-	#email = StringField('Email', validators=[DataRequired(), Email()])
 	old_password = PasswordField('Nuvarande lösenord', validators=[DataRequired()])
 	new_password = PasswordField('Nytt lösenord', validators=[DataRequired()])
 	confirm_password = PasswordField('Konfirmera nytt lösenord', validators=[DataRequired(), EqualTo('new_password')])
 	submit = SubmitField('Uppdatera lösenord')
 
+# Form som används i reset password request
 class RequestResetForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	submit = SubmitField('Skicka lösonordsåterställning')
 
-	# Kollar ifall emailen finns
+	# Kontrollera om email-adressen redan finns i databasen
 	def validate_email(self, email):
 		email = User.query.filter_by(email=email.data).first()
 		if email is None:
@@ -67,7 +50,7 @@ class ResetPasswordForm(FlaskForm):
 		validators=[DataRequired(), EqualTo('password')])
 	submit = SubmitField('Återställ lösenord')
 
-# Ingenting som används i dagsläget
+# Form som används för att uppdatera ett svar
 class UpdateResponseForm(FlaskForm):
 	updated_response = StringField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
