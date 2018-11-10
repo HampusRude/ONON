@@ -181,7 +181,7 @@ class Responses(db.Model, UserMixin):
 
 	# Den information som skrivs tillbaks om man printar objektet
 	def __repr__(self):
-		return "Responses('{self.afNum}', '{self.creator}', '{self.custCompName}', '{self.custCompContact}')"
+		return f"Responses('{self.afNum}', '{self.creator}', '{self.custCompName}', '{self.custCompContact}')"
 
 	# Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
 	def return_responses(self):
