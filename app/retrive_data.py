@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
-import pickle
-import psycopg2
 from app import db
 from app.q_dict import question_id_dict
 from app.models import Responses
@@ -39,16 +37,16 @@ def get_all_responses(data, string_dict):
             if questions:
                 for answers in questions:
                     answer = answers.get("answers")
-                    q_id = answers.get("id")       # retrieves the questions survey monkey id
-                    q = question_id_dict[q_id]
+                    q_id = answers.get("id")            # retrieves the questions survey monkey id
+                    q = question_id_dict[q_id]        # retrives the db question id
                     ans = []
                     for data in answer:
                         if data.get("text"):
                             ans.append(data.get("text"))
                         elif data.get("choice_id"):
                             ans.append(string_dict[data.get("choice_id")])
-                    ans_string =  ", ".join(str(x) for x in ans)
-                    response_dictionary[q] = ans_string
+                    ans_string = ", ".join(str(x) for x in ans)
+                    response_dictionary[q] = ans_string       # saves according to db schema
         list_of_responses.append(response_dictionary)
     return list_of_responses
 
@@ -88,59 +86,51 @@ def get_all_strings(myjson, key, description, weight):
                 get_all_strings(item, key, description, weight)
 
 def update_db(rl):
-    # Clear table before writing new entries
-    try:
-        num_rows_deleted = db.session.query(Responses).delete()
-        db.session.commit()
-        print("Cleared " + str(num_rows_deleted) + " rows from db")
-    except:
-        db.session.rollback()
+    # Get the list of response_ids in database
+    all_res = Responses.query.all()
+    all_res_id = []
+    for res in all_res:
+        all_res_id.append(res.response_id)
 
     # For each response in the list responses, create an object and add to database
     for res in rl:
         obj = Responses(**res)
-        db.session.add(obj)
+        if obj.response_id not in all_res_id:
+            db.session.add(obj)
+            print("Added response: " + str(obj.response_id) + " to database")
     db.session.commit()
-    print("Added " + str(len(rl)) + " responses to db.")
 
 ### Combines the response list and details dictionary to something readable to verify data
-def print_data(rl, sd):
+def print_data(rl, dd):
     for response in rl:         # returns a dictionary for each unique response
-        i = -7
+        print(" --- New response --- ")
         for line in response:   # For each key (question id) in the dictionary of responses
-            print(" --- New response --- ")
-            i += 1
             if line != 'response_id' and line != 'timestamp':
                 answer = response[line]
-                question = sd[line]
-                print("q" + str(i) + ": " + str(line) + " # " + str(question))
+                question = dd[line]
+                print(str(question) + " | " + str(answer))
+            else:
+                print("--" + str(line))
 
 ### The whole lifecycle of updating the database with new responses
 def main():
-    access_token = "CFuvukyd7PyT8d8NDMhT9ofBcsgJ8FOmKZl2Wqmc0E5jzmCCDMjhvSzuKlHUYmz0PCXep2Ze1e1wGKLH4ljAL7TDLc1zfv1V.FQUPoJUBKWuQHqHsi6Y9XCCHsljjkJq"
+    access_token = "eu8UCOb1ARZae00whmCKNwA0d-kYUfA45emNHAvblRVbZUD7fS8NgITq.Bo34b88zKEz97YERLKNj.T0Y3HiRFhqr5jXnhjIi3J1POlFNJ7ZR03B8JmkAv-jkGvUfjf9"
 
     # Retrieve the responses from SurveyMonkey
-    responses_url = "https://api.surveymonkey.com/v3/surveys/157901927/responses/bulk"
+    responses_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/bulk"
     responses = get_survey_data(responses_url, access_token)    # Retrieve data from surveymonkey
     responses_parsed = json.loads(responses.text)               # Parse json response from server
 
     # Retrieve details on the structure of the form on SurveyMonkey
-    details_url = "https://api.surveymonkey.com/v3/surveys/157901927/details"
+    details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
     details = get_survey_data(details_url, access_token)    # Retrieve data from surveymonkey
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
 
     q_id_dict = question_id_dict    # question_id_dict is a global variable, this line is for clarification
-
     response_list = get_all_responses(responses_parsed, details_dict)    # A list of dicts with individual responses
 
     update_db(response_list)
 
-    # TODO: Update reference to new survey
-
 if __name__ == "__main__":
     main()
-
-# TODO: Implement SQLAlchemy
-# ToDo  Format timestamp and send to database
-
