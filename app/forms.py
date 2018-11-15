@@ -22,7 +22,7 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Lösenord', validators=[DataRequired()])
-	remember = BooleanField('Kom igåg mig')
+	remember = BooleanField('Kom ihåg mig')
 	submit = SubmitField('Logga in')
 
 # Form för att uppdatera kontoinformation
