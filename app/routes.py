@@ -4,17 +4,9 @@ from app import app, bcrypt, db, mail
 from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from app.q_dict import question_list
 import random, string
 
-
-Questions = [
-    'Hur viktigt är det att: Säkerställa att era fordon ger ett intryck som ligger i linje med ert varumärke? \n skala 1-5',
-	'Hur viktigt är det att: Leva upp till våra kunders miljökrav på sina leverantörers fordonspark? \n skala 1-5',
-    'Hur viktigt är det att: Anpassa fordonsparken till vår miljöambition? \n skala 1-5',
-	'Vad är det specifikt ni inte är nöjda med? (t.ex tid, kostnad, kvalitet)?',
-    'På vilket sätt är detta viktigt - vad är konsekvenserna om ni inte lyckas?',
-	'Har ni några tankar på hur ni kan åtgärda detta (finns plan? budget=..)'
-]
 
 #
 #	Detta är route-filen som exekverar olika saker beroende på klientens GET-request
@@ -32,10 +24,11 @@ def home():
 @app.route("/kund")
 @login_required
 def kund():
-	if current_user.title == 'VG':
-		responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
-	else:
-		responses = Responses.query.filter_by(afNum=current_user.afNum)
+	responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
+#	if current_user.title == 'VG':
+#		responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
+#	else:
+#		responses = Responses.query.filter_by(afNum=current_user.afNum)
 	return render_template('kund.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
 
 # Denna sida visar alla svar som en kund har gett
@@ -43,7 +36,12 @@ def kund():
 @login_required
 def responses(company):
 	responses = Responses.query.filter_by(custCompName=company).first() # Hämtar response kopplat till företaget man klickat på
-	return render_template('responses.html', title=company, resObject=responses, responses=responses.return_responses(), questions=Questions) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+
+	r = responses.return_responses()
+	for i in range(172):
+		if r[i] == None:
+			#TODO: Remove from list
+	return render_template('responses.html', title=company, resObject=responses, responses=responses.return_responses(), questions=question_list) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
 @app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
 @login_required

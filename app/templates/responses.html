@@ -14,14 +14,15 @@
 <h1>{{resObject.custCompName}}</h1>
 <p></p>
 
-{% for i in range(6) %}
+{% for i in range(172) %}
 	<article class="media content-section">
 	  <div class="media-body">
-	    <div class="article-metadata">
-			<b><big>Fråga {{ i+1 }}</big>
-			  <p>{{ questions[i] }}</p></b>
-	    </div>
-	    <a href="{{resObject.response_id}}/q{{i+1}}">{{ responses[i] }}</a>
+		  {% if response[i] is defined %}
+			  <div class="article-metadata">
+				<b><big>{{ questions[i] }}</big></b>
+			  </div>
+		  <a href="{{resObject.response_id}}/q{{i+1}}">{% if responses[i] is 'None' %}</a>
+		  {% endif %}
 	  </div>
 	</article>
 {% endfor %}

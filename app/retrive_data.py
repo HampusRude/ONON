@@ -97,7 +97,7 @@ def update_db(rl):
         obj = Responses(**res)
         if obj.response_id not in all_res_id:
             db.session.add(obj)
-            print("Added response: " + str(obj.response_id) + " to database")
+            print("Added response " + str(obj.response_id) + " to database")
     db.session.commit()
 
 ### Combines the response list and details dictionary to something readable to verify data
@@ -127,10 +127,15 @@ def main():
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
 
-    q_id_dict = question_id_dict    # question_id_dict is a global variable, this line is for clarification
+#    q_id_dict = question_id_dict    # question_id_dict is a global variable, this line is for clarification
+
     response_list = get_all_responses(responses_parsed, details_dict)    # A list of dicts with individual responses
 
     update_db(response_list)
 
+
+
 if __name__ == "__main__":
     main()
+
+
