@@ -87,17 +87,20 @@ def get_all_strings(myjson, key, description, weight):
 
 def update_db(rl):
     # Get the list of response_ids in database
-    all_res = Responses.query.all()
-    all_res_id = []
-    for res in all_res:
-        all_res_id.append(res.response_id)
+    db_res = Responses.query.all()
+    db_res_id = []
+    for res in db_res:
+        db_res_id.append(res.response_id)
 
+    new_res_id = []
     # For each response in the list responses, create an object and add to database
     for res in rl:
         obj = Responses(**res)
-        if obj.response_id not in all_res_id:
+        if obj.response_id not in db_res_id:
             db.session.add(obj)
             print("Added response " + str(obj.response_id) + " to database")
+            new_res_id.append(obj.response_id)
+
     # For each response in the db, if it is not on survey monkey, remove from db
     # Primarily neeeded in the initial testing phase when many dummy-responses were made
     for id in db_res_id:
