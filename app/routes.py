@@ -195,7 +195,7 @@ def send_reset_email(user):
 		sender='noreply@ONONAB.com', 
 		recipients=[user.email])			# Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
 	# Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
-	msg.body = '''Klicka på följande länk för att återställa ditt lösenord:
+	msg.body = f'''Klicka på följande länk för att återställa ditt lösenord:
 {url_for('reset_token', token=token, _external=True)}
 '''
 
