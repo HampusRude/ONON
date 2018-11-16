@@ -98,6 +98,13 @@ def update_db(rl):
         if obj.response_id not in all_res_id:
             db.session.add(obj)
             print("Added response " + str(obj.response_id) + " to database")
+    # For each response in the db, if it is not on survey monkey, remove from db
+    # Primarily neeeded in the initial testing phase when many dummy-responses were made
+    for id in db_res_id:
+        if id not in new_res_id:
+            obj = Responses.query.filter_by(response_id=id).first()
+            print("Removed response " + str(obj.response_id) + " from database")
+            db.session.delete(obj)
     db.session.commit()
 
 ### Combines the response list and details dictionary to something readable to verify data

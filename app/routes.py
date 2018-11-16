@@ -35,13 +35,15 @@ def kund():
 @app.route("/kund/<company>")
 @login_required
 def responses(company):
-	responses = Responses.query.filter_by(custCompName=company).first() # Hämtar response kopplat till företaget man klickat på
-
-	r = responses.return_responses()
-	for i in range(172):
-		if r[i] == None:
-			#TODO: Remove from list
-	return render_template('responses.html', title=company, resObject=responses, responses=responses.return_responses(), questions=question_list) # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+    responses = Responses.query.filter_by(
+        custCompName=company).first()  # Hämtar response kopplat till företaget man klickat på
+    q = []
+    r = []
+    for i, res in enumerate(responses.return_responses()):
+        if res != None:
+            q.append(question_list[i])
+            r.append(res)
+    return render_template('responses.html', title=company, resObject=responses, responses=r, questions=q, length=len(q))  # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
 @app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
 @login_required
