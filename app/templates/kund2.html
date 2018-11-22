@@ -70,7 +70,7 @@
 }
 </style>
 
-<h2>Mina kunder</h2>
+<h2>Registrerade svar:</h2>
 
 <h5>Sök på:</h5>
 
@@ -99,7 +99,35 @@
 
 <script>
 
-function client() {
+function Search() {
+  var input, filter, table, tr, td, i;
+  client = document.getElementById("Client");
+  creator = document.getElementById("Creator");
+
+  f_client = client.value.toUpperCase();
+  f_creator = creator.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td_0 = tr[i].getElementsByTagName("td")[0];
+    td_1 = tr[i].getElelemtsByTagName("td")[1];
+    if (td_0) {
+      if (td_0.innerHTML.toUpperCase().indexOf(f_client) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+      if (td_1.innerHTML.toUpperCase().indexOf(f_creator) > -1 {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+
+function Client() {
   var input, filter, table, tr, td, i;
   input = document.getElementById("Client");
   filter = input.value.toUpperCase();

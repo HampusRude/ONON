@@ -54,3 +54,12 @@ class ResetPasswordForm(FlaskForm):
 class UpdateResponseForm(FlaskForm):
 	updated_response = StringField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
+
+class SearchResponseForm(FlaskForm):
+    client = StringField('Företagets Namn')
+    orgnum = StringField('Organisationsnummer')
+    begin_date = StringField('Start-datum')
+    end_date = StringField('Slutdatum')
+    creator = StringField('Skapare')
+    afnum = StringField('ÅF-Nummer')
+    submit = SubmitField('Sök')
