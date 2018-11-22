@@ -223,7 +223,6 @@ class Responses(db.Model, UserMixin):
 
     # Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
     def return_responses(self):
-        # TODO: Iterate through the stored responses and only return the questions with not null answers
         return [
             self.afNum,
             self.creator,
