@@ -92,11 +92,10 @@ def register():
         else:
             first_password = randomString() # Generera ett första lösenord
             hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8') # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
-            print('LÖSENORD TILL ' + form.email.data + ': ' + first_password)
             if form.title.data == 'VG':
                 user = User(email=form.email.data, password=hashed_password, title=form.title.data)	# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
             else:
-                if form.afNum.data == "":		# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
+                if form.afNum.data == "":	# Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
                     flash(f'Du måste ange ÅF-nummer för en återförsäljare','danger')
                     return redirect(url_for('register'))
                 else:
@@ -142,9 +141,9 @@ def login():
             flash('Välkommen, du är nu inloggad som ' + user.email, 'success')		# Grön banner som säger att det gick bra
             return redirect(next_page) if next_page else redirect(url_for('home'))	# Redirect till första-sidan om du inte försökt komma in på någonting annat innan
         else:
-            return
-            flash('Email eller lösenord är felaktigt, försök igen', 'danger')		# Fungerar det inte, så kommer det istället upp en röd ('danger') banner med text
-    return render_template('login.html', title='Login', form=form)					# Renderar login.html och skickar in formen
+            flash('Email eller lösenord är felaktigt, försök igen', 'danger')
+            return redirect(url_for('login'))
+    return render_template('login.html', title='Login', form=form) # Renderar login.html och skickar in formen
 
 
 # Denna route renderar ingenting specielt, utan den kör flask-kommantod logout_user() och redirectar dig till första-sidan
@@ -159,7 +158,6 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        print(current_user)
         if bcrypt.check_password_hash(current_user.password, form.old_password.data):
             new_hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
             current_user.password = new_hashed_password
@@ -167,8 +165,8 @@ def account():
             flash('Ditt lösenord har uppdaterats', 'success')
             return redirect(url_for('home'))
         else:
-            return
             flash('Fel lösenord angivet, försök igen', 'danger')
+            return redirect(url_for('account'))
     return render_template('account.html', title='Account', form=form)
 
 
