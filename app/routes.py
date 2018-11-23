@@ -144,8 +144,8 @@ def login():
 			flash('Välkommen, du är nu inloggad som ' + user.email, 'success')		# Grön banner som säger att det gick bra
 			return redirect(next_page) if next_page else redirect(url_for('home'))	# Redirect till första-sidan om du inte försökt komma in på någonting annat innan
 		else:
-			return
-			flash('Email eller lösenord är felaktigt, försök igen', 'danger')		# Fungerar det inte, så kommer det istället upp en röd ('danger') banner med text
+			flash('Email eller lösenord är felaktigt, försök igen', 'danger')  # Fungerar det inte, så kommer det istället upp en röd ('danger') banner med text
+			return redirect(url_for('login'))
 	return render_template('login.html', title='Login', form=form)					# Renderar login.html och skickar in formen
 
 
