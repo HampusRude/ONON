@@ -5,11 +5,44 @@
   box-sizing: border-box;
 }
 
-#myInput {
+#Client {
   background-image: url('/css/searchicon.png');
   background-position: 10px 10px;
   background-repeat: no-repeat;
-  width: 100%;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#OrgNum {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#Creator {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#AfNum {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 20%;
   font-size: 16px;
   padding: 12px 20px 12px 40px;
   border: 1px solid #ddd;
@@ -37,37 +70,125 @@
 }
 </style>
 
-<h2>Mina kunder</h2>
+<h2>Registrerade svar:</h2>
 
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+<h5>Sök på:</h5>
+
+<input type="text" id="Client" onkeyup="Client()" placeholder="Kund" title="Ange ett kundnamn">
+<input type="text" id="OrgNum" onkeyup="OrgNum()" placeholder="Org.num" title="Ange ett org.nummer">
+<input type="text" id="Creator" onkeyup="Creator()" placeholder="Skapare" title="Ange en skapare">
+<input type="text" id="AfNum" onkeyup="AfNum()" placeholder="ÅF Nummer" title="Ange ett ÅF-nummer">
 
 <table id="myTable">
   <tr class="header">
-    <th style="width:40%;">Kund</th>
-    <th style="width:40%;">Organisationsnummer</th>
-    <th style="width:40%;">Skapare</th>
-    <th style="width:40%;">ÅF-nummer</th>
-      {% for i in range(10) %}
+    <th style="width:20%;">Kund</th>
+    <th style="width:20%;">Organisationsnummer</th>
+    <th style="width:20%;">Skapare</th>
+    <th style="width:20%;">ÅF-nummer</th>
+      {% for response in responses %}
   </tr>
     <tr>
-        <td>{{ i }}</td>
-        <td>{{ i+1 }}</td>
-        <td>{{ i+2 }}</td>
-        <td>{{ i+3 }}</td>
+        <td><a href="kund/{{response.custCompName}}">{{ response.custCompName }}</a></td>
+        <td><a href="kund/{{response.custCompName}}">{{ response.custOrgNum }}</a></td>
+        <td><a href="kund/{{response.custCompName}}">{{ response.creator }}</a></td>
+        <td><a href="kund/{{response.custCompName}}">{{ response.afNum }}</a></td>
     </tr>
     {% endfor %}
 
 </table>
 
 <script>
-function myFunction() {
+
+function Search() {
   var input, filter, table, tr, td, i;
-  input = document.getElementById("myInput");
+  client = document.getElementById("Client");
+  creator = document.getElementById("Creator");
+
+  f_client = client.value.toUpperCase();
+  f_creator = creator.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td_0 = tr[i].getElementsByTagName("td")[0];
+    td_1 = tr[i].getElelemtsByTagName("td")[1];
+    if (td_0) {
+      if (td_0.innerHTML.toUpperCase().indexOf(f_client) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+      if (td_1.innerHTML.toUpperCase().indexOf(f_creator) > -1 {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+
+function Client() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("Client");
   filter = input.value.toUpperCase();
   table = document.getElementById("myTable");
   tr = table.getElementsByTagName("tr");
   for (i = 0; i < tr.length; i++) {
     td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function OrgNum() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("OrgNum");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function Creator() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("Creator");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+function AfNum() {
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("AfNum");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
     if (td) {
       if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";

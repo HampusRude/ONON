@@ -1,5 +1,5 @@
 site.db
 .iml
 desktop.ini
-FlaskApp.iml
-misc.xml
+.idea/FlaskApp.iml
+.idea/misc.xml
