@@ -28,7 +28,7 @@ def kund():
     #if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
     responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
     #return render_template('kund3.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
-    return render_template('kund3.html') # Renderar kund.html och skickar med alla rader från databasen
+    return render_template('kund3.html', responses=responses, title="Kundsida") # Renderar kund.html och skickar med alla rader från databasen
 
 
 # Denna sida visar alla svar som en kund har gett
@@ -52,7 +52,7 @@ def updateResponse(responseId, res):
     responseForm = Responses.query.filter_by(response_id=responseId).first()
     response = getattr(responseForm, res)
     if form.validate_on_submit():
-        # TODO Lägg till felhantering här samt redirecta användaren till föregående sida
+        # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data) 	# Ändrar innehåll i objectet
         db.session.commit() 									# Commitar ändringen till databasen
         flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
@@ -169,7 +169,7 @@ def account():
         else:
             flash('Fel lösenord angivet, försök igen', 'danger')
             return redirect(url_for('account'))
-    return render_template('account.html', title='Account', form=form)
+    return render_template('account.html', title='Konto', form=form)
 
 
 # Sida du kommer till när du klickat på "Glömt lösenord?"

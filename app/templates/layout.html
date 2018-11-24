@@ -9,15 +9,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+
+	<link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='on-on_logo.png') }}"/>
     
     <!-- I detta block kan du lägga in ytterlgare rader till <head> -->
     {% block head %}
 	{% endblock head %}
 
 	{% if title %}
-	<title>ONON - {{ title }}</title>
-	{% else %}
-	<title>ONON</title>
+	<title>{{ title }}</title>
 	{% endif %}
 
 </head>
@@ -25,7 +25,7 @@
 	<header class="site-header">
 	  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 	    <div class="container">
-	      <a class="navbar-brand mr-4" href="/">ONON</a>
+			<a class="navbar-brand mr-4" href="/"><img src="{{ url_for('static', filename='on-on_logo.png') }}" class="img-responsive" style="width:40px;hight:40px"></img></a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
 	      </button>
