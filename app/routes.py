@@ -27,7 +27,9 @@ def kund():
     #form = SearchResponseForm()
     #if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
     responses = Responses.query.all()	# Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
-    return render_template('kund2.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
+    #return render_template('kund3.html', title='Kunder', responses=responses) # Renderar kund.html och skickar med alla rader från databasen
+    return render_template('kund3.html') # Renderar kund.html och skickar med alla rader från databasen
+
 
 # Denna sida visar alla svar som en kund har gett
 @app.route("/kund/<company>")
