@@ -32,6 +32,11 @@ class UpdateAccountForm(FlaskForm):
 	confirm_password = PasswordField('Konfirmera nytt lösenord', validators=[DataRequired(), EqualTo('new_password')])
 	submit = SubmitField('Uppdatera lösenord')
 
+class DeleteAccountForm(FlaskForm):
+	password = PasswordField('Lösenord')
+	confirm_password = PasswordField('Konfirmera nytt lösenord', validators=[DataRequired(), EqualTo('password')])
+	submit = SubmitField('Radera konto')
+
 # Form som används i reset password request
 class RequestResetForm(FlaskForm):
 	email = StringField('Email', validators=[DataRequired(), Email()])
