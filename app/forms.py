@@ -8,7 +8,7 @@ from app.models import User
 # Lösenord självgenererasi routes.py och skickas till det som skrivs in i email nedan
 class RegistrationForm(FlaskForm):
 	email = StringField('E-mail', validators=[DataRequired(), Email()])
-	title = SelectField('Titel', choices=[('VF', 'Välj företag'), ('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
+	title = SelectField('Titel', choices=[('VT', 'Välj titel'), ('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
 	afNum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
 
@@ -59,12 +59,3 @@ class ResetPasswordForm(FlaskForm):
 class UpdateResponseForm(FlaskForm):
 	updated_response = StringField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
-
-class SearchResponseForm(FlaskForm):
-    client = StringField('Företagets Namn')
-    orgnum = StringField('Organisationsnummer')
-    begin_date = StringField('Start-datum')
-    end_date = StringField('Slutdatum')
-    creator = StringField('Skapare')
-    afnum = StringField('ÅF-Nummer')
-    submit = SubmitField('Sök')
