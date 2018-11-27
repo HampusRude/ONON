@@ -37,6 +37,7 @@ def responses(company):
     responses = Responses.query.filter_by(custCompName=company).first()
     q = []
     r = []
+    print(responses.return_responses())
     for i, res in enumerate(responses.return_responses()):
         if res != None:
             q.append(question_list[i])
