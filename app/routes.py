@@ -206,6 +206,7 @@ def deleteAccount():
         if bcrypt.check_password_hash(current_user.password, form.password.data):
             delete_this_user = User.query.filter_by(email=current_user.email).first()
             flash(f"Kontot för {current_user.email} är nu raderat", "danger")
+            logout_user()
             db.session.delete(delete_this_user)
             db.session.commit()
             return redirect(url_for('home'))
