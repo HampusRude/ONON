@@ -284,4 +284,4 @@ def webhook():
         return ''
     elif request.method == 'POST':
         print("POST request")
-        return "\nGod kvall din javla skaggbiff. \n. \n. \n. \n Dags att sova nu eller?\n"
+        return "Post request successfully responded"
