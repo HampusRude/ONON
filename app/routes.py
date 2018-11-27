@@ -26,8 +26,7 @@ def home():
 @login_required
 def kund():
     responses = Responses.query.all()  # Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
-    return render_template('kund3.html', responses=responses,
-                           title="Arkiv")  # Renderar kund.html och skickar med alla rader från databasen
+    return render_template('kund3.html', responses=responses, title="Arkiv")  # Renderar kund.html och skickar med alla rader från databasen
 
 
 # Denna sida visar alla svar som en kund har gett
@@ -42,8 +41,7 @@ def responses(company):
         if res != None:
             q.append(question_list[i])
             r.append(res)
-    return render_template('responses.html', title=company, resObject=responses, responses=r, questions=q, length=len(
-        q))  # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+    return render_template('responses.html', title=company, resObject=responses, responses=r, questions=q, length=len(q))  # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
 
 
 @app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
@@ -89,36 +87,28 @@ def statistics():
 # Denna sida är för att kunna skapa ett konto på servern
 @app.route("/register", methods=['GET', 'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
 def register():
-    if current_user.is_authenticated:  # current_user är en modul importerad från flask_login som känner av om någon redan är inloggad
-        return redirect(url_for('home'))  # Om så är fallet, rendera home.html
     form = RegistrationForm()  # Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
     if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
-        if form.title.data == 'VF':  # Om inte personen väljer vilket företag hen representerar körs detta
-            flash('Du måste välja vilket en titel för användaren', 'danger')
+        if form.title.data == 'VT':  # Om inte personen väljer vilket företag hen representerar körs detta
+            flash('Du måste välja en titel för användaren', 'danger')
             return redirect(url_for('register'))
         else:
-            first_password = randomString()  # Generera ett första lösenord
-            hashed_password = bcrypt.generate_password_hash(first_password).decode(
-                'utf-8')  # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
+            random_password = randomString()  # Generera ett första lösenord
+            hashed_password = bcrypt.generate_password_hash(random_password).decode('utf-8')  # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
             if form.title.data == 'VG':
-                user = User(email=form.email.data, password=hashed_password,
-                            title=form.title.data)  # Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
+                user = User(email=form.email.data, password=hashed_password, title=form.title.data)  # Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
             else:
                 if form.afNum.data == "":  # Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
                     flash(f'Du måste ange ÅF-nummer för en återförsäljare', 'danger')
                     return redirect(url_for('register'))
                 else:
-                    user = User(email=form.email.data, password=hashed_password, title=form.title.data,
-                                afNum=form.afNum.data)
+                    user = User(email=form.email.data, password=hashed_password, title=form.title.data, afNum=form.afNum.data)
             db.session.add(user)  # SQLAlchemy kommando för att adda objektet
             db.session.commit()  # commitar till databasen
-            flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
-                  'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
-            send_register_email(user, first_password)
-            return redirect(url_for(
-                'login'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
-    return render_template('register.html', title='Register',
-                           form=form)  # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
+            flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren', 'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+            send_register_email(user, random_password)
+            return redirect(url_for('home'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
+    return render_template('register.html', title='Register', form=form)  # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
 
 
 def send_register_email(user, first_password):
@@ -135,8 +125,7 @@ Lösenord: {first_password}
 Klicka på länken nedan för att logga in och byta lösenord:
 {url_for('account', _external=True)}
 '''
-    mail.send(
-        msg)  # Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
+    mail.send(msg)  # Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
 
 
 def randomString():
@@ -145,22 +134,17 @@ def randomString():
     return ''.join(random.choice(letters) for i in range(length))
 
 
-@app.route("/login", methods=['GET',
-                              'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
+@app.route("/login", methods=['GET', 'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
 def login():
     if current_user.is_authenticated:  # current_user är en modul importerad från flask_login som känner av om någon redan är inloggad
         return redirect(url_for('home'))  # Om så är fallet, rendera home.html
     form = LoginForm()  # Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
     if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
         # Kod som kontrollerar om användaren finns i databasen
-        user = User.query.filter_by(
-            email=form.email.data).first()  # Försöker hämta användaren i databasen genom att kolla om det finns ett User-objekt med angiven email
-        if user and bcrypt.check_password_hash(user.password,
-                                               form.password.data):  # Om användarnamnet stämmer samt om lösenordet som användaren skrivit in i formen stämmer med det hashade lösenordet i databasen, kör nedan
-            login_user(user,
-                       remember=form.remember.data)  # login_user är en importerad modul från flask. remember är en form som finns i Forms.py. En check-box "remember me"
-            next_page = request.args.get(
-                'next')  # Funktion som tar dig till den sidan du va på innan, om du försökt klicka på kundsida men inte kommit åt den pga att du inte var inloggad, så ska du redirectas till den och inte första-sidan när du lyckats logga in
+        user = User.query.filter_by(email=form.email.data).first()  # Försöker hämta användaren i databasen genom att kolla om det finns ett User-objekt med angiven email
+        if user and bcrypt.check_password_hash(user.password, form.password.data):  # Om användarnamnet stämmer samt om lösenordet som användaren skrivit in i formen stämmer med det hashade lösenordet i databasen, kör nedan
+            login_user(user, remember=form.remember.data)  # login_user är en importerad modul från flask. remember är en form som finns i Forms.py. En check-box "remember me"
+            next_page = request.args.get('next')  # Funktion som tar dig till den sidan du va på innan, om du försökt klicka på kundsida men inte kommit åt den pga att du inte var inloggad, så ska du redirectas till den och inte första-sidan när du lyckats logga in
             flash('Välkommen, du är nu inloggad som ' + user.email, 'success')  # Grön banner som säger att det gick bra
             return redirect(next_page) if next_page else redirect(
                 url_for('home'))  # Redirect till första-sidan om du inte försökt komma in på någonting annat innan
@@ -204,6 +188,7 @@ def deleteAccount():
         if bcrypt.check_password_hash(current_user.password, form.password.data):
             delete_this_user = User.query.filter_by(email=current_user.email).first()
             flash(f"Kontot för {current_user.email} är nu raderat", "danger")
+            logout_user()
             db.session.delete(delete_this_user)
             db.session.commit()
             return redirect(url_for('home'))
@@ -246,8 +231,7 @@ def send_reset_email(user):
 
 
 # Sida som du kommer till när du har klickat på länken som du får i mailet när du har glömt lösenordet
-@app.route("/reset_password/<token>", methods=['GET',
-                                               'POST'])  # Tokene'n som skapades mha User-objektet ovan kommer att läggas efter "/" i GET-requesten som kommer att användas för att validera att det är du (tidsbegränsad)
+@app.route("/reset_password/<token>", methods=['GET', 'POST'])  # Tokene'n som skapades mha User-objektet ovan kommer att läggas efter "/" i GET-requesten som kommer att användas för att validera att det är du (tidsbegränsad)
 def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('home'))
