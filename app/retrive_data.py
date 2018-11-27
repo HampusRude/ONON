@@ -123,7 +123,7 @@ def print_data(rl, dd):
                 print("--" + str(line))
 
 ### The whole lifecycle of updating the database with new responses
-def main():
+def retrieve_data():
     access_token = "eu8UCOb1ARZae00whmCKNwA0d-kYUfA45emNHAvblRVbZUD7fS8NgITq.Bo34b88zKEz97YERLKNj.T0Y3HiRFhqr5jXnhjIi3J1POlFNJ7ZR03B8JmkAv-jkGvUfjf9"
 
     # Retrieve the responses from SurveyMonkey

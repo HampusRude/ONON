@@ -6,6 +6,7 @@ from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from app.q_dict import question_list
+from app.retrive_data import retrieve_data
 import random, string
 
 
@@ -31,35 +32,33 @@ def kund():
 
 
 # Denna sida visar alla svar som en kund har gett
-@app.route("/kund/<company>")
+@app.route("/kund/<response_id>")
 @login_required
-def responses(company):
+def responses(response_id):
     # Hämtar response kopplat till företaget man klickat på
-    responses = Responses.query.filter_by(custCompName=company).first()
+    responses = Responses.query.filter_by(response_id=response_id).first()
 #    q = []
 #    r = []
 #    for i, res in enumerate(responses.return_responses()):
 #        if res != None:
 #            q.append(question_list[i])
 #            r.append(res)
-
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
-    return render_template('responses.html', title=company, resObject=responses, responses=responses.return_responses(), questions=question_list, length=len(
+    return render_template('responses.html', title=responses.q4, resObject=responses, responses=responses.return_responses(), questions=question_list, length=len(
         question_list))
 
-
-@app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
+@app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
 @login_required
-def updateResponse(responseId, res):
+def updateResponse(response_id, res):
     form = UpdateResponseForm()
-    responseForm = Responses.query.filter_by(response_id=responseId).first()
+    responseForm = Responses.query.filter_by(response_id=response_id).first()
     response = getattr(responseForm, res)
     if form.validate_on_submit():
         # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
         flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
-        return redirect(url_for('responses', company=responseForm.custCompName))
+        return redirect(url_for('responses', response_id=responseForm.response_id))
     elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
         form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
     return render_template('updateresponse.html', response=response, form=form)
@@ -87,7 +86,6 @@ def statistics():
                            brand_important=share_brand_important, climat_not_important=share_climat_not_important,
                            climat_important=share_climat_important)
 
-
 # Denna sida är för att kunna skapa ett konto på servern
 @app.route("/register", methods=['GET', 'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
 def register():
@@ -100,8 +98,9 @@ def register():
             return redirect(url_for('register'))
         else:
             first_password = randomString()  # Generera ett första lösenord
-            hashed_password = bcrypt.generate_password_hash(first_password).decode(
-                'utf-8')  # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
+
+            # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
+            hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
             if form.title.data == 'VG':
                 user = User(email=form.email.data, password=hashed_password,
                             title=form.title.data)  # Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
@@ -110,8 +109,7 @@ def register():
                     flash(f'Du måste ange ÅF-nummer för en återförsäljare', 'danger')
                     return redirect(url_for('register'))
                 else:
-                    user = User(email=form.email.data, password=hashed_password, title=form.title.data,
-                                afNum=form.afNum.data)
+                    user = User(email=form.email.data, password=hashed_password, title=form.title.data, afNum=form.afNum.data)
             db.session.add(user)  # SQLAlchemy kommando för att adda objektet
             db.session.commit()  # commitar till databasen
             flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
@@ -268,6 +266,14 @@ def reset_token(token):
         return redirect(url_for('login'))  # Redirectar dig till login så att du kan logga in med det nya lösenordet
     return render_template('reset_token.html', title='Reset Password', form=form)  # Renderar reset_token.html
 
+
+# Kör retrieve_data som hämtar all data från survey monkey och lägger in i databasen.
+# ---- Tillfällig lösning innan vi får webhooken och fungera ----
+@app.route("/udb")
+@login_required
+def update_db():
+    retrieve_data()
+    return render_template('home.html', title='Home')
 
 # Webhook för att ta emote POST requests from Surveymonkey
 @app.route("/webhook", methods=['POST', 'HEAD'])

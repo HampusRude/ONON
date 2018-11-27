@@ -1,12 +1,12 @@
 question_id_dict = {
-    '166337053': 'afNum',       # ÅF-nummer
-    '166337054': 'creator',     # Skaparen av denna analys (ditt namn)
-    '166337056': 'custOrgNum',  # Org. nummer
-    '166336900': 'custCompName',# Företagets namn:
-    '166338171': 'custNumCars', # Antal bilar i vagnsparken
-    '166338436': 'custCompContact', # Kontaktpersonens Namn:
-    '166338327': 'custCompEmail', # Kontaktpersonens mailadress:
-    '166337737': 'custCompPhone', # Kontaktpersonens telefonnummer:
+    '166337053': 'q1', # ÅF-nummer
+    '166337054': 'q2', # Skaparen av denna analys (ditt namn)
+    '166337056': 'q3', # Org. nummer
+    '166336900': 'q4', # Företagets namn: (custCompName)
+    '166338171': 'q5', # Antal bilar i vagnsparken
+    '166338436': 'q6', # Kontaktpersonens Namn:
+    '166338327': 'q7', # Kontaktpersonens mailadress:
+    '166337737': 'q8', # Kontaktpersonens telefonnummer:
     '166336915': 'q9',
     '166336899': 'q10',
     '166336916': 'q11',
@@ -174,14 +174,14 @@ question_id_dict = {
 }
 
 question_dict = {
-    'afNum': 'ÅF-nummer',
-    'creator': 'Intervjuare',
-    'custOrgNum': 'Org. nummer',
-    'custCompName': 'Företagets namn',
-    'custNumCars': 'Antal bilar i vagnparken',
-    'custCompContact': 'Kontaktperson',
-    'custCompEmail': 'Mailadress',
-    'custCompPhone': 'Telefonnummer',
+    'q1': 'ÅF-nummer',
+    'q2': 'Intervjuare',
+    'q3': 'Org. nummer',
+    'q4': 'Företagets namn',
+    'q5': 'Antal bilar i vagnparken',
+    'q6': 'Kontaktperson',
+    'q7': 'Mailadress',
+    'q8': 'Telefonnummer',
     'q9': 'Hur vill ni att era kunder ska uppfatta ert val av bilar?',
     'q10': 'Hur viktigt är det att bilarna matchar ert varumärke? (På en femgradig skala där 1 = "Inte alls viktigt" till 5 = "mycket viktigt")',
     'q11': 'Vad är er image och vad vill ni kommunicera med bilarna?',

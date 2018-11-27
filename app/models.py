@@ -44,14 +44,14 @@ class Responses(db.Model, UserMixin):
     response_id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.String(20))
     # Gathered by the interviewer
-    afNum = db.Column(db.String(150))
-    creator = db.Column(db.String(150))
-    custOrgNum = db.Column(db.String(150), unique=True)
-    custCompName = db.Column(db.String(150))
-    custNumCars = db.Column(db.String(150))
-    custCompContact = db.Column(db.String(150))
-    custCompEmail = db.Column(db.String(150))
-    custCompPhone = db.Column(db.String(150))
+    q1 = db.Column(db.String(150))
+    q2 = db.Column(db.String(150))
+    q3 = db.Column(db.String(150), unique=True)
+    q4 = db.Column(db.String(150))
+    q5 = db.Column(db.String(150))
+    q6 = db.Column(db.String(150))
+    q7 = db.Column(db.String(150))
+    q8 = db.Column(db.String(150))
     q9 = db.Column(db.String(500))
     q10 = db.Column(db.String(500))
     q11 = db.Column(db.String(500))
@@ -224,14 +224,14 @@ class Responses(db.Model, UserMixin):
     # Metod som returnerar alla svar, hårdkodat, i en lista så att man kan iterera igenom denna när man renderar HTML-dokumentet på enkelt sätt
     def return_responses(self):
         return [
-            self.afNum,
-            self.creator,
-            self.custOrgNum,
-            self.custCompName,
-            self.custNumCars,
-            self.custCompContact,
-            self.custCompEmail,
-            self.custCompPhone,
+            self.q1,
+            self.q2,
+            self.q3,
+            self.q4,
+            self.q5,
+            self.q6,
+            self.q7,
+            self.q8,
             self.q9,
             self.q10,
             self.q11,

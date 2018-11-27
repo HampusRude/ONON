@@ -28,10 +28,10 @@ window.onload = function() {
     <tbody>
     {% for response in responses %}
         <tr>
-            <td><a href="kund/{{response.custCompName}}">{{ response.custCompName }}</a></td>
-            <td><a href="kund/{{response.custCompName}}">{{ response.custOrgNum }}</a></td>
-            <td><a href="kund/{{response.custCompName}}">{{ response.creator }}</a></td>
-            <td><a href="kund/{{response.custCompName}}">{{ response.afNum }}</a></td>
+            <td><a href="kund/{{response.response_id}}">{{ response.q4 }}</a></td>
+            <td><a href="kund/{{response.response_id}}">{{ response.q3 }}</a></td>
+            <td><a href="kund/{{response.response_id}}">{{ response.q2 }}</a></td>
+            <td><a href="kund/{{response.response_id}}">{{ response.q1 }}</a></td>
         </tr>
     {% endfor %}
     </tbody>
