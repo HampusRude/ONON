@@ -36,14 +36,16 @@ def kund():
 def responses(company):
     # Hämtar response kopplat till företaget man klickat på
     responses = Responses.query.filter_by(custCompName=company).first()
-    q = []
-    r = []
-    for i, res in enumerate(responses.return_responses()):
-        if res != None:
-            q.append(question_list[i])
-            r.append(res)
-    return render_template('responses.html', title=company, resObject=responses, responses=r, questions=q, length=len(
-        q))  # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+#    q = []
+#    r = []
+#    for i, res in enumerate(responses.return_responses()):
+#        if res != None:
+#            q.append(question_list[i])
+#            r.append(res)
+
+    # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
+    return render_template('responses.html', title=company, resObject=responses, responses=responses.return_responses(), questions=question_list, length=len(
+        question_list))
 
 
 @app.route("/kund/<responseId>/<res>", methods=['GET', 'POST'])
