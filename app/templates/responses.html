@@ -11,10 +11,13 @@
 <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
 
 <p></p>
-<h1>{{resObject.q4}}</h1>
-<h2>{{resObject.q3}}</h2>
-<p>Skapare: {{resObject.q2}}</p>
-<p>ÅF-nummer: {{resObject.q1}}</p>
+<center>
+	<h1>{{resObject.q4}}</h1>
+	<h2>{{resObject.q3}}</h2>
+	<p>Skapare: {{resObject.q2}}</p>
+	<p>ÅF-nummer: {{resObject.q1}}</p>
+</center>
+
 <p></p>
 {% for i in range(length) %}
 	{% if loop.index > 8 %}
