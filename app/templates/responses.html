@@ -11,9 +11,13 @@
 <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
 
 <p></p>
-<h1>{{resObject.custCompName}}</h1>
+<h1>{{resObject.q4}}</h1>
+<h2>{{resObject.q3}}</h2>
+<p>Skapare: {{resObject.q2}}</p>
+<p>ÅF-nummer: {{resObject.q1}}</p>
 <p></p>
 {% for i in range(length) %}
+	{% if loop.index > 8 %}
 	<article class="media content-section">
 	  <div class="media-body">
 		  <div class="article-metadata">
@@ -22,5 +26,6 @@
 		  <a href="{{resObject.response_id}}/q{{i+1}}">{{ responses[i] }}</a>
 	  </div>
 	</article>
+	{% endif %}
 {% endfor %}
 {% endblock content%}
