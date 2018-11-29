@@ -26,9 +26,8 @@ def home():
 @app.route("/kund")
 @login_required
 def kund():
-    responses = Responses.query.all()  # Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
-    return render_template('kund3.html', responses=responses,
-                           title="Arkiv")  # Renderar kund.html och skickar med alla rader från databasen
+    responses = Responses.query.all()
+    return render_template('kund3.html', responses=responses, title="Arkiv")
 
 
 # Denna sida visar alla svar som en kund har gett
@@ -37,26 +36,24 @@ def kund():
 def responses(response_id):
     # Hämtar response kopplat till företaget man klickat på
     responses = Responses.query.filter_by(response_id=response_id).first()
-
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
     return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
 
-@app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
+@app.route("/kund/<response_id>/<res>")
 @login_required
 def updateResponse(response_id, res):
     form = UpdateResponseForm()
     responseForm = Responses.query.filter_by(response_id=response_id).first()
     response = getattr(responseForm, res)
+    form.updated_response.data = response
     if form.validate_on_submit():
         # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
         flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
         return redirect(url_for('responses', response_id=responseForm.response_id))
-    elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
-        form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
-    return render_template('updateresponse.html', response=response, form=form)
+    return render_template('updateresponse.html', response=response, form=form, question=question_dict[res])
 
 
 @app.route("/statistics")

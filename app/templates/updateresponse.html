@@ -3,10 +3,10 @@
 <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
 <p></p>
 <div class="content-section">
-	<form method="POST" action="">
+	<form action="">
 		{{ form.hidden_tag() }}
 		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">Ändra svar</legend>
+			<legend class="border-bottom mb-4">{{ question }}</legend>
 			<div class="form-group">
 				{{ form.updated_response.label(class="form-control-label") }}
 				{% if form.updated_response.errors %}
