@@ -12,23 +12,26 @@
 
 <p></p>
 <center>
-	<h1>{{resObject.q4}}</h1>
-	<h2>{{resObject.q3}}</h2>
-	<p>Skapare: {{resObject.q2}}</p>
-	<p>ÅF-nummer: {{resObject.q1}}</p>
+	<h1>{{responses.q4}}</h1>
+	<h2>{{responses.q3}}</h2>
+	<p>Skapare: {{responses.q2}}</p>
+	<p>ÅF-nummer: {{responses.q1}}</p>
 </center>
 
 <p></p>
 {% for i in range(length) %}
-	{% if loop.index > 8 %}
+	{% if loop.index > 9 %}
+		{% set question = "q" ~ i|string %}
+			{% if responses[question] != None %}
 	<article class="media content-section">
 	  <div class="media-body">
 		  <div class="article-metadata">
-			  <b><big>{{ questions[i] }}</big></b>
+			  <b><big>{{ questions[question] }}</big></b>
 			  </div>
-		  <a href="{{resObject.response_id}}/q{{i+1}}">{{ responses[i] }}</a>
+		  <a href="{{responses.response_id}}/{{question}}">{{ responses[question] }}</a>
 	  </div>
 	</article>
+			{% endif %}
 	{% endif %}
 {% endfor %}
 {% endblock content%}

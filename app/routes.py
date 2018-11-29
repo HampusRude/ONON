@@ -5,7 +5,7 @@ from app import app, bcrypt, db, mail
 from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
-from app.q_dict import question_list
+from app.q_dict import question_dict
 from app.retrive_data import retrieve_data
 import random, string
 
@@ -44,8 +44,8 @@ def responses(response_id):
 #            q.append(question_list[i])
 #            r.append(res)
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
-    return render_template('responses.html', title=responses.q4, resObject=responses, responses=responses.return_responses(), questions=question_list, length=len(
-        question_list))
+    return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
+        question_dict))
 
 @app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
 @login_required
