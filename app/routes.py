@@ -50,7 +50,7 @@ def updateResponse(response_id, res):
         # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
-        flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
+        flash(f'Svar för fråga: {question_dict[res]} uppdaterades', 'success')
         return redirect(url_for('responses', response_id=responseForm.response_id))
     elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
         form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
