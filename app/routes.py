@@ -40,19 +40,20 @@ def responses(response_id):
     return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
 
-@app.route("/kund/<response_id>/<res>")
+@app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
 @login_required
 def updateResponse(response_id, res):
     form = UpdateResponseForm()
     responseForm = Responses.query.filter_by(response_id=response_id).first()
     response = getattr(responseForm, res)
-    form.updated_response.data = response
     if form.validate_on_submit():
         # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
         flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
         return redirect(url_for('responses', response_id=responseForm.response_id))
+    elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
+        form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
     return render_template('updateresponse.html', response=response, form=form, question=question_dict[res])
 
 
