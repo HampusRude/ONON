@@ -37,12 +37,7 @@ def kund():
 def responses(response_id):
     # Hämtar response kopplat till företaget man klickat på
     responses = Responses.query.filter_by(response_id=response_id).first()
-#    q = []
-#    r = []
-#    for i, res in enumerate(responses.return_responses()):
-#        if res != None:
-#            q.append(question_list[i])
-#            r.append(res)
+
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
     return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))

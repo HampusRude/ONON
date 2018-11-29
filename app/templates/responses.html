@@ -4,25 +4,128 @@
 	a {
 		color: black;
 	}
+
+	/* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+
+    #Button {
+      float: left;
+      margin-right: 5px;
+      display:inline-block;
+    }
+    #Toggles {
+      float: right;
+      display:inline-block;
+    }
+
+    .alignleft {
+	    float: left;
+	    margin-right: 15px;
+    }
+    .alignright {
+	    float: right;
+    }
+
 </style>
 {% endblock head%}
+<body onLoad="onLoad()">
 {% block content %}
 <!-- Knapp för att gå tillbaks-->
-<button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button>
+<div id="Button_box">
+    <div class="alignleft">
+        <button onclick="window.history.back()" class="btn btn-outline-info">Gå tillbaka</button><br>
+    </div>
+    <div class="alignright">
+        <div class="alignleft">
+            Dölj tomma svar
+        </div>
+        <div class="alignright">
+        <label class="switch">
+            <input type="checkbox" id="toggle" onclick="toggle()">
+            <span class="slider round"></span>
+        </label>
+        </div>
+    </div>
+</div>
+<div style="clear: both;"></div>
 
 <p></p>
 <center>
-	<h1>{{responses.q4}}</h1>
-	<h2>{{responses.q3}}</h2>
-	<p>Skapare: {{responses.q2}}</p>
-	<p>ÅF-nummer: {{responses.q1}}</p>
+	<h1>{{responses.q4}} ({{responses.q3}})</h1><br>
+	ÅF-nummer: <a href="{{responses.response_id}}/q1">{{ responses.q1 }}</a> <br>
+    Kontaktperson: <a href="{{responses.response_id}}/q6">{{ responses.q6 }}</a> <br>
+    Mail: <a href="{{responses.response_id}}/q7">{{ responses.q7 }}</a> <br>
+    Tel. nr: <a href="{{responses.response_id}}/q8">{{ responses.q8 }}</a> <br>
+    Skapare: <a href="{{responses.response_id}}/q2">{{ responses.q2 }}</a></p>
 </center>
 
+
 <p></p>
+
+
 {% for i in range(length) %}
 	{% if loop.index > 9 %}
 		{% set question = "q" ~ i|string %}
-			{% if responses[question] != None %}
 	<article class="media content-section">
 	  <div class="media-body">
 		  <div class="article-metadata">
@@ -31,7 +134,44 @@
 		  <a href="{{responses.response_id}}/{{question}}">{{ responses[question] }}</a>
 	  </div>
 	</article>
-			{% endif %}
 	{% endif %}
 {% endfor %}
+
+<script>
+window.onload = onLoad;
+
+function onLoad() {
+    var checkBox = document.getElementById("toggle");
+    var responses = document.getElementsByClassName("media content-section");
+
+    checkBox.checked = true
+    for(var i=0; i<responses.length; i++){
+        if(responses[i].innerHTML.indexOf("None") !== -1){
+            responses[i].style.display = 'none';
+            responses[i].style.background = '#ffcccc';
+        }
+    }
+}
+
+function toggle() {
+    var checkBox = document.getElementById("toggle");
+    var responses = document.getElementsByClassName("media content-section");
+
+    if (checkBox.checked == true){
+        for(var i=0; i<responses.length; i++){
+            if(responses[i].innerHTML.indexOf("None") !== -1){
+                responses[i].style.display = 'none';
+            }
+        }
+    } else {
+        for(var i=0; i<responses.length; i++){
+            if(responses[i].innerHTML.indexOf("None") !== -1){
+                responses[i].style.display = 'block';
+            }
+        }
+    }
+}
+</script>
+
 {% endblock content%}
+
