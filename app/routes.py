@@ -91,7 +91,7 @@ def register():
             return redirect(url_for('register'))
         else:
             first_password = randomString()  # Generera ett första lösenord
-
+            print(first_password)
             # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
             hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
             if form.title.data == 'VG':
@@ -107,7 +107,7 @@ def register():
             db.session.commit()  # commitar till databasen
             flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
                   'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
-            send_register_email(user, first_password)
+            #send_register_email(user, first_password)
             return redirect(url_for(
                 'login'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
     return render_template('register.html', title='Register',
