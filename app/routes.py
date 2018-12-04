@@ -40,22 +40,22 @@ def responses(response_id):
     return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
 
+
 @app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
 @login_required
 def updateResponse(response_id, res):
-    form = UpdateResponseForm()
-    responseForm = Responses.query.filter_by(response_id=response_id).first()
-    response = getattr(responseForm, res)
-    if form.validate_on_submit():
-        # TODO Lägg till felhantering ?
-        setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
-        db.session.commit()  # Commitar ändringen till databasen
-        flash(f'Svar för fråga: {question_dict[res]} uppdaterades', 'success')
-        return redirect(url_for('responses', response_id=responseForm.response_id))
-    elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
-        form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
-    return render_template('updateresponse.html', response=response, form=form, question=question_dict[res])
-
+	form = UpdateResponseForm()
+	responseForm = Responses.query.filter_by(response_id=response_id).first()
+	response = getattr(responseForm, res)
+	if form.validate_on_submit():
+		# TODO Lägg till felhantering här samt redirecta användaren till föregående sida
+		setattr(responseForm, res, form.updated_response.data) 	# Ändrar innehåll i objectet
+		db.session.commit() 									# Commitar ändringen till databasen
+		flash(f'Svar för fråga {question_dict[res]} uppdaterades', 'success')
+		return redirect(url_for('responses', response_id=response_id))
+	elif request.method == 'GET':			# Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
+		form.updated_response.data = response	# Då lägger vi in det som finns i response i textfältet
+	return render_template('updateresponse.html', title="Uppdatera svar", response=response, form=form, question=question_dict[res])
 
 @app.route("/statistics")
 @login_required
@@ -91,7 +91,6 @@ def register():
             return redirect(url_for('register'))
         else:
             first_password = randomString()  # Generera ett första lösenord
-            print(first_password)
             # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
             hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
             if form.title.data == 'VG':
@@ -103,6 +102,7 @@ def register():
                     return redirect(url_for('register'))
                 else:
                     user = User(email=form.email.data, password=hashed_password, title=form.title.data, afNum=form.afNum.data)
+            send_register_email(user, first_password)
             db.session.add(user)  # SQLAlchemy kommando för att adda objektet
             db.session.commit()  # commitar till databasen
             flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
@@ -126,7 +126,7 @@ Emailadress: {user.email}
 Lösenord: {first_password}
 
 Klicka på länken nedan för att logga in och byta lösenord:
-{url_for('account', _external=True)}
+https://onontest.azurewebsites.net/account
 '''
     mail.send(
         msg)  # Skickar meddelandet, se __init__.py för att förstå hur konfigurationerna för detta fungerar, och GOOGLA
