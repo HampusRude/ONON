@@ -26,9 +26,8 @@ def home():
 @app.route("/kund")
 @login_required
 def kund():
-    responses = Responses.query.all()  # Query på ALLA rader i hela databasen. En rad per företag. Definierad så att man får ('ÅF-nummer', 'Företagsnamn', 'organisationsnummer', 'KAM')
-    return render_template('kund3.html', responses=responses,
-                           title="Arkiv")  # Renderar kund.html och skickar med alla rader från databasen
+    responses = Responses.query.all()
+    return render_template('kund3.html', responses=responses, title="Arkiv")
 
 
 # Denna sida visar alla svar som en kund har gett
@@ -37,7 +36,6 @@ def kund():
 def responses(response_id):
     # Hämtar response kopplat till företaget man klickat på
     responses = Responses.query.filter_by(response_id=response_id).first()
-
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
     return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
@@ -52,11 +50,11 @@ def updateResponse(response_id, res):
         # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
-        flash(f'Svar för fråga {res.strip("q")} uppdaterades', 'success')
+        flash(f'Svar för fråga: {question_dict[res]} uppdaterades', 'success')
         return redirect(url_for('responses', response_id=responseForm.response_id))
     elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
         form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
-    return render_template('updateresponse.html', response=response, form=form)
+    return render_template('updateresponse.html', response=response, form=form, question=question_dict[res])
 
 
 @app.route("/statistics")
@@ -93,7 +91,7 @@ def register():
             return redirect(url_for('register'))
         else:
             first_password = randomString()  # Generera ett första lösenord
-
+            print(first_password)
             # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
             hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
             if form.title.data == 'VG':
@@ -109,7 +107,7 @@ def register():
             db.session.commit()  # commitar till databasen
             flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
                   'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
-            send_register_email(user, first_password)
+            #send_register_email(user, first_password)
             return redirect(url_for(
                 'login'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
     return render_template('register.html', title='Register',
