@@ -12,6 +12,7 @@ DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user='HampusRude@
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/onontest'
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
