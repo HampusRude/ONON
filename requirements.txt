@@ -7,4 +7,3 @@ flask-wtf
 wtforms
 itsdangerous
 requests
-psycopg2
