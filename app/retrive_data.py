@@ -108,6 +108,7 @@ def update_db(rl):
             obj = Responses.query.filter_by(response_id=id).first()
             print("Removed response " + str(obj.response_id) + " from database")
             db.session.delete(obj)
+    print('You reach this')
     db.session.commit()
 
 ### Combines the response list and details dictionary to something readable to verify data

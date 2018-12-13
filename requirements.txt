@@ -1,5 +1,5 @@
 flask
-flask-sqlalchemy==1.3.0b1
+flask-sqlalchemy
 flask-bcrypt
 flask-login
 flask-mail
@@ -7,4 +7,3 @@ flask-wtf
 wtforms
 itsdangerous
 requests
-pip==18.1

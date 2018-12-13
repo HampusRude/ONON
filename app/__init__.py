@@ -6,8 +6,12 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'c67a60abf8486349a4d5ad912aaf0d1f'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
+DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user='HampusRude@hampustest',pw='Password!',url='hampustest.postgres.database.azure.com',db='postgres')
+
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/onontest'
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
