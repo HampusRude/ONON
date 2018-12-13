@@ -41,8 +41,8 @@ class User(db.Model, UserMixin):
 # Kundinformation samt alla svar som vi kommer att hämta ner från Surveymonkey kommer att sparas i objekt och skapas i classen Responses nedan
 class Responses(db.Model, UserMixin):
     # Initial setup questions
-    response_id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.String(20))
+    response_id = db.Column(db.String(15), primary_key=True)
+    timestamp = db.Column(db.String(30))
     # Gathered by the interviewer
     q1 = db.Column(db.String(150))
     q2 = db.Column(db.String(150))
