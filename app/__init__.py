@@ -6,7 +6,11 @@ from flask_mail import Mail
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'c67a60abf8486349a4d5ad912aaf0d1f'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://rudahl:t2jguGe83oxwYgeV@ononapp.database.windows.net:1433/onondb'
+
+# Vad en annan använt för att synka upp SQLAlchemy mot Azure
+# create_engine('mssql+pyodbc://{user_name}:{password}@{our_subdomain}.database.windows.net:1433/{our_database_name}', echo=True)
+
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
