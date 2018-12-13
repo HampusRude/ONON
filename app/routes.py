@@ -277,4 +277,6 @@ def webhook():
         return ''
     elif request.method == 'POST':
         print("POST request")
+        # TODO: Plocka ut response_id
+
         return "Post request successfully responded"
