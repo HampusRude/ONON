@@ -11,8 +11,8 @@ app.config['SECRET_KEY'] = 'c67a60abf8486349a4d5ad912aaf0d1f'
 #db_uri = "mssql+pyodbc:///?odbc_connect=%s" % params
 # db_uri = 'mssql+pyodbc://rudahl:t2jguGe83oxwYgeV@ononapp.database.windows.net:1433/onondb?driver=ODBC+Driver+13+for+SQL+Server'
 
-# db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user='HampusRude@hampustest',pw='Password!',url='hampustest.postgres.database.azure.com',db='postgres')
-db_uri = 'sqlite:///site.db'
+db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user='HampusRude@hampustest',pw='Password!',url='hampustest.postgres.database.azure.com',db='postgres')
+# db_uri = 'sqlite:///site.db'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
