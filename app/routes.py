@@ -6,8 +6,8 @@ from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from app.q_dict import question_dict
-from app.retrive_data import retrieve_data
-import random, string
+from app.retrive_data import retrieve_data, add_response
+import random, string, json
 
 
 #
@@ -274,7 +274,11 @@ def update_db():
 def webhook():
     if request.method == 'HEAD':
         print("HEAD request")
-        return ''
+        return ""
     elif request.method == 'POST':
-        print("POST request")
+        jsonData = json.loads(request.data)
+        if (jsonData['event_type'] == 'response_completed'):
+            response_id = jsonData['resources']['respondent_id']
+            print("respondent ID: " + response_id)
+            add_response(response_id)
         return "Post request successfully responded"

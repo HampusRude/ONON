@@ -12,7 +12,7 @@ def load_user(user_id):
 #
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)	# Unikt för varje användare, används när man skapar unika "reset-password-tokens"
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     title = db.Column(db.String(2), nullable=False)
