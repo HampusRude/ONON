@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models import User
 
@@ -57,5 +57,5 @@ class ResetPasswordForm(FlaskForm):
 
 # Form som används för att uppdatera ett svar
 class UpdateResponseForm(FlaskForm):
-	updated_response = StringField('Nytt svar', validators=[DataRequired()])
+	updated_response = TextAreaField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
