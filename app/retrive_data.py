@@ -5,6 +5,8 @@ from app import db
 from app.q_dict import question_id_dict
 from app.models import Responses
 
+access_token = "eu8UCOb1ARZae00whmCKNwA0d-kYUfA45emNHAvblRVbZUD7fS8NgITq.Bo34b88zKEz97YERLKNj.T0Y3HiRFhqr5jXnhjIi3J1POlFNJ7ZR03B8JmkAv-jkGvUfjf9"
+
 ### Retrives json data from survey monkey
 def get_survey_data(url, access_token):
 
@@ -28,7 +30,7 @@ def get_all_responses(data, string_dict):
     for response in responses:
         response_dictionary = {}        # The key is the question and the value is the respondents answer
 
-        response_dictionary["response_id"] = int(response.get("id")) % 2**31 # Makes the UID smaller to store in db
+        response_dictionary["response_id"] = str(response.get("id")) # Makes the UID smaller to store in db
         response_dictionary["timestamp"] = response.get("date_modified")     # Retrieves timestamp for the response
 
         pages = response.get("pages")   # A list with the answers for the different pages in the form
@@ -85,6 +87,7 @@ def get_all_strings(myjson, key, description, weight):
             if type(item) in (list, dict):
                 get_all_strings(item, key, description, weight)
 
+
 def update_db(rl):
     # Get the list of response_ids in database
     db_res = Responses.query.all()
@@ -96,10 +99,12 @@ def update_db(rl):
     # For each response in the list responses, create an object and add to database
     for res in rl:
         obj = Responses(**res)
+        new_res_id.append(obj.response_id)
         if obj.response_id not in db_res_id:
             db.session.add(obj)
             print("Added response " + str(obj.response_id) + " to database")
-            new_res_id.append(obj.response_id)
+        else:
+            print("Response " + str(obj.response_id) + " already in database")
 
     # For each response in the db, if it is not on survey monkey, remove from db
     # Primarily neeeded in the initial testing phase when many dummy-responses were made
@@ -124,8 +129,6 @@ def print_data(rl, dd):
 
 ### The whole lifecycle of updating the database with new responses
 def retrieve_data():
-    access_token = "eu8UCOb1ARZae00whmCKNwA0d-kYUfA45emNHAvblRVbZUD7fS8NgITq.Bo34b88zKEz97YERLKNj.T0Y3HiRFhqr5jXnhjIi3J1POlFNJ7ZR03B8JmkAv-jkGvUfjf9"
-
     # Retrieve the responses from SurveyMonkey
     responses_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/bulk"
     responses = get_survey_data(responses_url, access_token)    # Retrieve data from surveymonkey
@@ -143,7 +146,67 @@ def retrieve_data():
 
     update_db(response_list)
 
+def get_response_data (response, string_dict):
+    response_dictionary = {}  # The key is the question and the value is the respondents answer
+    response_dictionary["response_id"] = str(response.get("id"))  # Makes the UID smaller to store in db
+    response_dictionary["timestamp"] = response.get("date_modified")  # Retrieves timestamp for the response
+    pages = response.get("pages")  # A list with the answers for the different pages in the form
+    for page in pages:
+        questions = page.get("questions")  # A list with a set of questions and corresponding answer
+        if questions:
+            for answers in questions:
+                answer = answers.get("answers")
+                q_id = answers.get("id")  # retrieves the questions survey monkey id
+                q = question_id_dict[q_id]  # retrives the db question id
+                ans = []
+                for data in answer:
+                    if data.get("text"):
+                        ans.append(data.get("text"))
+                    elif data.get("choice_id"):
+                        ans.append(string_dict[data.get("choice_id")])
+                ans_string = ", ".join(str(x) for x in ans)
+                response_dictionary[q] = ans_string  # saves according to db schema
+    return response_dictionary
 
+def add_response(response_id):
+    # Retrieve the responses from SurveyMonkey
+    response_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/%s/details" % str(response_id)
+    try:
+        response = get_survey_data(response_url, access_token)  # Retrieve data from surveymonkey
+    except:
+        print("Connection error")
+    response_parsed = json.loads(response.text)               # Parse json response from server
+
+    # Retrieve details on the structure of the form on SurveyMonkey
+    details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
+    details = get_survey_data(details_url, access_token)    # Retrieve data from surveymonkey
+    details_parsed = json.loads(details.text)               # Parse json response from server
+    details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
+    try:
+        get_response_data(response_parsed, details_dict)
+    except:
+        print("An exception occured")
+
+    # Get the list of response_ids in database
+    db_res = Responses.query.all()
+    db_res_id= []   # List of ids retrieved from site.db
+    for res in db_res:
+        db_res_id.append(res.response_id)
+    res = get_response_data(response_parsed, details_dict)
+    obj = Responses(**res)
+    if obj.response_id not in db_res_id:
+        db.session.add(obj)
+        db.session.commit()
+        print("Added response %s to database" % (str(obj.response_id)))
+    else:
+        print("Response %s already in database" % (str(obj.response_id)))
+
+
+def main():
+    retrieve_data()
+    res_list = [10310404153, 10312578983]
+    for i in res_list:
+        add_response(i)
 
 if __name__ == "__main__":
     main()
