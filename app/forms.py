@@ -8,7 +8,7 @@ from app.models import User
 # Lösenord självgenererasi routes.py och skickas till det som skrivs in i email nedan
 class RegistrationForm(FlaskForm):
 	email = StringField('E-mail', validators=[DataRequired(), Email()])
-	title = SelectField('Titel', choices=[('VT', 'Välj titel'), ('VG', 'Volkswagen chef'), ('AF', 'Återförsäljare')], validators=[DataRequired()]) # Vilken titel användare kommer att ha, WG kan se allt, ÅF kan bara se det som respektive ÅF har lagt in
+	admin = BooleanField('Administratörskonto')
 	afNum = StringField('ÅF-nummer')
 	submit = SubmitField('Registrera')
 

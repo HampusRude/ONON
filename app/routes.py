@@ -86,30 +86,19 @@ def register():
         return redirect(url_for('home'))  # Om så är fallet, rendera home.html
     form = RegistrationForm()  # Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
     if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
-        if form.title.data == 'VF':  # Om inte personen väljer vilket företag hen representerar körs detta
-            flash('Du måste välja vilket en titel för användaren', 'danger')
-            return redirect(url_for('register'))
-        else:
-            first_password = randomString()  # Generera ett första lösenord
-            print(first_password)
-            # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
-            hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
-            if form.title.data == 'VG':
-                user = User(email=form.email.data, password=hashed_password,
-                            title=form.title.data)  # Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
-            else:
-                if form.afNum.data == "":  # Felhanterare om man glömmer lägga in ÅF-nummer när man registrerar ett ÅF-konto
-                    flash(f'Du måste ange ÅF-nummer för en återförsäljare', 'danger')
-                    return redirect(url_for('register'))
-                else:
-                    user = User(email=form.email.data, password=hashed_password, title=form.title.data, afNum=form.afNum.data)
-            db.session.add(user)  # SQLAlchemy kommando för att adda objektet
-            db.session.commit()  # commitar till databasen
-            flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
-                  'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
-            #send_register_email(user, first_password)
-            return redirect(url_for(
-                'login'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
+        first_password = randomString()  # Generera ett första lösenord
+        print(first_password)
+        # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
+        hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
+        user = User(email=form.email.data, password = hashed_password, admin=form.admin.data)# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
+        send_register_email(user, first_password)   # Skickar inloggningsuppgifter till kontot
+        db.session.add(user)  # SQLAlchemy kommando för att adda objektet
+        db.session.commit()  # commitar till databasen
+        flash(f'Konto skapat för {form.email.data}! Inloggningsinformation har skickats till kontoinnehavaren',
+              'success')  # Givet att allt ovan fungerar så kommer en grön ('success') banner upp i toppen av sidan och konfirmerar att det gick
+        #send_register_email(user, first_password)
+        return redirect(url_for(
+            'login'))  # För att samtidigt redirecta dig till login-sidan (url_for är en modul importerad från flask)
     return render_template('register.html', title='Register',
                            form=form)  # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
 

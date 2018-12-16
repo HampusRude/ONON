@@ -15,8 +15,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    title = db.Column(db.String(2), nullable=False)
-    afNum = db.Column(db.String(5))
+    admin = db.Column(db.Boolean, nullable=False)
     #TODO Remove title + afNum and add 'Name'
 
     # Metod för att skapa en token kopplat till en specifik användare om denne har glömt sitt lösenord. Detta gör när man är inne på /reset_password

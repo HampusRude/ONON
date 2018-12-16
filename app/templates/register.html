@@ -18,34 +18,9 @@
 						{{ form.email(class="form-control form-control-lg") }}
 					{% endif %}
 				</div>
-				<div>
-					{{ form.title.label(class="form-control-label") }}
-					{% if form.title.errors %}
-						{{ form.title(class="form-control form-control-lg is-invalid") }}
-						<div class="invalid-feedback">
-							{% for errors in form.title.errors %}
-							<span>{{ errors }}</span>
-							{% endfor %}
-						</div>
-					{% else %}
-						{{ form.title(class="form-control form-control-lg") }}
-					{% endif %}
-				</div>
-				<p></p>
-				<div class="form-group">
-					{{ form.afNum.label(class="form-control-label") }}
-					<br>
-					<small>OBS! Lämna tom om WGS chef är valt</small>
-					{% if form.afNum.errors %}
-						{{ form.afNum(class="form-control form-control-lg is-invalid") }}
-						<div class="invalid-feedback">
-							{% for errors in form.afNum.errors %}
-							<span>{{ errors }}</span>
-							{% endfor %}
-						</div>
-					{% else %}
-						{{ form.afNum(class="form-control form-control-lg") }}
-					{% endif %}
+				<div class="form-check">
+					{{ form.admin(class="form-check-input") }}
+					{{ form.admin.label(class="form-check-label") }}
 				</div>
 			</fieldset>
 			<div class="form-group">
