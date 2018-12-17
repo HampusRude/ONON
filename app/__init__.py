@@ -5,11 +5,8 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 
-
-db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['DB_USER'],
-                                                               pw=os.environ['DB_PASSWORD'],
-                                                               url=os.environ['DB_URL'],
-                                                               db=os.environ['DB_DB'])
+db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['DB_USER'], pw=os.environ['DB_PASSWORD'], url=os.environ['DB_URL'], db=os.environ['DB_DB'])
+# db_uri = 'sqlite:///site.db'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
