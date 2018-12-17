@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import requests
 import json
+import os
 from app import db
 from app.q_dict import question_id_dict
 from app.models import Responses
 
-access_token = "eu8UCOb1ARZae00whmCKNwA0d-kYUfA45emNHAvblRVbZUD7fS8NgITq.Bo34b88zKEz97YERLKNj.T0Y3HiRFhqr5jXnhjIi3J1POlFNJ7ZR03B8JmkAv-jkGvUfjf9"
-
 ### Retrives json data from survey monkey
-def get_survey_data(url, access_token):
+def get_survey_data(url):
+    access_token = os.environ['SM_ACCESS_TOKEN']
 
     s = requests.Session()
     s.headers.update({
@@ -131,12 +131,12 @@ def print_data(rl, dd):
 def retrieve_data():
     # Retrieve the responses from SurveyMonkey
     responses_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/bulk"
-    responses = get_survey_data(responses_url, access_token)    # Retrieve data from surveymonkey
+    responses = get_survey_data(responses_url)    # Retrieve data from surveymonkey
     responses_parsed = json.loads(responses.text)               # Parse json response from server
 
     # Retrieve details on the structure of the form on SurveyMonkey
     details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
-    details = get_survey_data(details_url, access_token)    # Retrieve data from surveymonkey
+    details = get_survey_data(details_url)    # Retrieve data from surveymonkey
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
 
@@ -173,8 +173,8 @@ def add_response(response_id):
     response_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/%s/details" % str(response_id)
     details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
     try:
-        response = get_survey_data(response_url, access_token)  # Retrieve data from surveymonkey
-        details = get_survey_data(details_url, access_token)  # Retrieve data from surveymonkey
+        response = get_survey_data(response_url)  # Retrieve data from surveymonkey
+        details = get_survey_data(details_url)  # Retrieve data from surveymonkey
     except:
         print("Connection error")
     response_parsed = json.loads(response.text)               # Parse json response from server
