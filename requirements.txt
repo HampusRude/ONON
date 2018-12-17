@@ -8,3 +8,4 @@ wtforms
 itsdangerous
 requests
 psycopg2
+os
