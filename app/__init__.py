@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 
+"""
 os.environ['DB_USER'] = 'HampusRude@hampustest'
 os.environ['DB_PASSWORD'] = 'Password!'
 os.environ['DB_URL'] = 'hampustest.postgres.database.azure.com'
@@ -15,6 +16,7 @@ os.environ['MAIL_SERVER'] = 'smtp.googlemail.com'
 os.environ['MAIL_PORT'] = '587'
 os.environ['MAIL_USERNAME'] = 'noreplybehovsanalystest@gmail.com'
 os.environ['MAIL_PASSWORD'] = 'SecretPassword!'
+"""
 
 db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['DB_USER'],
                                                                pw=os.environ['DB_PASSWORD'],
