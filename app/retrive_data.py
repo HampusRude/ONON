@@ -161,7 +161,7 @@ def get_response_data (response, string_dict):
                 ans = []
                 for data in answer:
                     if data.get("text"):
-                        ans.append(data.get("text"))
+                        ans.append(data.get("text")[:498])  # Limit char-len of text to 500 chars
                     elif data.get("choice_id"):
                         ans.append(string_dict[data.get("choice_id")])
                 ans_string = ", ".join(str(x) for x in ans)
@@ -171,35 +171,34 @@ def get_response_data (response, string_dict):
 def add_response(response_id):
     # Retrieve the responses from SurveyMonkey
     response_url = "https://api.surveymonkey.com/v3/surveys/160620263/responses/%s/details" % str(response_id)
+    details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
     try:
         response = get_survey_data(response_url, access_token)  # Retrieve data from surveymonkey
+        details = get_survey_data(details_url, access_token)  # Retrieve data from surveymonkey
     except:
         print("Connection error")
     response_parsed = json.loads(response.text)               # Parse json response from server
 
-    # Retrieve details on the structure of the form on SurveyMonkey
-    details_url = "https://api.surveymonkey.com/v3/surveys/160620263/details"
-    details = get_survey_data(details_url, access_token)    # Retrieve data from surveymonkey
+    # Details on the structure of the form on SurveyMonkey
     details_parsed = json.loads(details.text)               # Parse json response from server
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
     try:
-        get_response_data(response_parsed, details_dict)
+        res = get_response_data(response_parsed, details_dict)
+
+        # Get the list of response_ids in database
+        db_res = Responses.query.all()
+        db_res_id = []  # List of ids retrieved from site.db
+        for res in db_res:
+            db_res_id.append(res.response_id)
+        obj = Responses(**res)
+        if obj.response_id not in db_res_id:
+            db.session.add(obj)
+            db.session.commit()
+            print("Added response %s to database" % (str(obj.response_id)))
+        else:
+            print("Response %s already in database" % (str(obj.response_id)))
     except:
         print("An exception occured")
-
-    # Get the list of response_ids in database
-    db_res = Responses.query.all()
-    db_res_id= []   # List of ids retrieved from site.db
-    for res in db_res:
-        db_res_id.append(res.response_id)
-    res = get_response_data(response_parsed, details_dict)
-    obj = Responses(**res)
-    if obj.response_id not in db_res_id:
-        db.session.add(obj)
-        db.session.commit()
-        print("Added response %s to database" % (str(obj.response_id)))
-    else:
-        print("Response %s already in database" % (str(obj.response_id)))
 
 
 def main():
