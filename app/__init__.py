@@ -13,7 +13,7 @@ db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ['APPSETTING_SECRET_KEY']
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['APPSETTING_DB_URI']
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
