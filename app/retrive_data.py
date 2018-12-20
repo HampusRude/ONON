@@ -8,7 +8,7 @@ from app.models import Responses
 
 ### Retrives json data from survey monkey
 def get_survey_data(url):
-    access_token = os.environ['SM_ACCESS_TOKEN']
+    #access_token = os.environ['SM_ACCESS_TOKEN']
 
     s = requests.Session()
     s.headers.update({
