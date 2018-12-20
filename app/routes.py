@@ -68,6 +68,9 @@ def updateResponse(response_id, res):
 # Denna sida är för att kunna skapa ett konto på servern
 @app.route("/register", methods=['GET', 'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
 def register():
+    if current_user.admin != True:
+        flash('Du måste ha adminkonto för att kunna registrera användare', 'danger')
+        return redirect(url_for('home'))
     form = RegistrationForm()  # Om inte, hämta RegistrationForm från Forms.py, och sedan se Return statement nedan
     if form.validate_on_submit():  # OM SubmitField klickas, kör nedan
         first_password = randomString()  # Generera ett första lösenord
