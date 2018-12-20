@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm, \
-    UpdateResponseForm, DeleteAccountForm
+    UpdateResponseForm, DeleteAccountForm, DeleteResponseForn
 from app import app, bcrypt, db, mail
 from app.models import User, Responses
 from flask_login import login_user, current_user, logout_user, login_required
@@ -31,13 +31,23 @@ def kund():
 
 
 # Denna sida visar alla svar som en kund har gett
-@app.route("/kund/<response_id>")
+@app.route("/kund/<response_id>", methods = ['GET', 'POST'])
 @login_required
 def responses(response_id):
     # Hämtar response kopplat till företaget man klickat på
+    form = DeleteResponseForn()
     responses = Responses.query.filter_by(response_id=response_id).first()
+    if form.validate_on_submit():
+        if form.confirmCompanyName.data == responses.q4:
+            flash(f"Behovsanalys för kund {responses.q4} är nu raderad", "info")
+            db.session.delete(responses)
+            db.session.commit()
+            return redirect(url_for('kund'))
+        else:
+            flash(f'Det gick inte att radera enkäten för kun {responses.q4}. Kontakta kundservice.')
+            return redirect(url_for('kund'))
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
-    return render_template('responses.html', title=responses.q4, responses=responses, questions=question_dict, length=len(
+    return render_template('responses.html', form=form, title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
 
 @app.route("/kund/<response_id>/<res>", methods=['GET', 'POST'])
@@ -47,7 +57,6 @@ def updateResponse(response_id, res):
     responseForm = Responses.query.filter_by(response_id=response_id).first()
     response = getattr(responseForm, res)
     if form.validate_on_submit():
-        # TODO Lägg till felhantering ?
         setattr(responseForm, res, form.updated_response.data)  # Ändrar innehåll i objectet
         db.session.commit()  # Commitar ändringen till databasen
         flash(f'Svar för fråga: {question_dict[res]} uppdaterades', 'success')
@@ -55,29 +64,6 @@ def updateResponse(response_id, res):
     elif request.method == 'GET':  # Om det är en GET request, dvs när man bara laddar sidan och inte stoppar in någonting i databasen
         form.updated_response.data = response  # Då lägger vi in det som finns i response i textfältet
     return render_template('updateresponse.html', response=response, form=form, question=question_dict[res])
-
-
-@app.route("/statistics")
-@login_required
-def statistics():
-    all_answers = Responses.query.all()
-
-    brand_not_important = Responses.query.filter_by(
-        q1=1).all()  # Returnerar en lista på Responses-objekt som svarat 1 på fråga 1
-    share_brand_not_important = int((len(brand_not_important) / len(all_answers)) * 100)
-
-    brand_important = Responses.query.filter_by(q1=5).all()
-    share_brand_important = int((len(brand_important) / len(all_answers)) * 100)
-
-    climat_not_important = Responses.query.filter_by(q2=1).all()
-    share_climat_not_important = int((len(climat_not_important) / len(all_answers)) * 100)
-
-    climat_important = Responses.query.filter_by(q2=5).all()
-    share_climat_important = int((len(climat_important) / len(all_answers)) * 100)
-
-    return render_template('statistics.html', title='Kundstatistik', brand_not_important=share_brand_not_important,
-                           brand_important=share_brand_important, climat_not_important=share_climat_not_important,
-                           climat_important=share_climat_important)
 
 # Denna sida är för att kunna skapa ett konto på servern
 @app.route("/register", methods=['GET', 'POST'])  # Kan hantera både GET och POST requests. POST requests sker när man skickar in inloggningsdetaljer
@@ -100,10 +86,10 @@ def register():
     return render_template('register.html', title='Register',
                            form=form)  # Om ingen är inloggad så renderas register.html tillsammans med RegistrationForm som hanterar registreringstrafiken
 
-
+#TODO: Lägg till en felhanterare ifall mailen inte skulle fungera
 def send_register_email(user, first_password):
-    msg = Message('Ditt konto till Behovsanalys.se',  # Mail-funktion från flask_mail
-                  sender='noreply@ONONAB.com',
+    msg = Message('Ditt konto till www.Behovsanalys.se',  # Mail-funktion från flask_mail
+                  sender='noreply@on-on.se',
                   recipients=[
                       user.email])  # Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
     # Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
@@ -253,7 +239,7 @@ def reset_token(token):
 @app.route("/udb")
 @login_required
 def update_db():
-    retrieve_data()
+    #retrieve_data()
     return render_template('home.html', title='Home')
 
 # Webhook för att ta emote POST requests from Surveymonkey

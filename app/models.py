@@ -16,7 +16,6 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     admin = db.Column(db.Boolean, nullable=False)
-    #TODO Remove title + afNum and add 'Name'
 
     # Metod för att skapa en token kopplat till en specifik användare om denne har glömt sitt lösenord. Detta gör när man är inne på /reset_password
     def get_reset_token(self, expires_sec=1800):
@@ -45,7 +44,7 @@ class Responses(db.Model, UserMixin):
     # Gathered by the interviewer
     q1 = db.Column(db.String(150))
     q2 = db.Column(db.String(150))
-    q3 = db.Column(db.String(150), unique=True)
+    q3 = db.Column(db.String(150))
     q4 = db.Column(db.String(150))
     q5 = db.Column(db.String(150))
     q6 = db.Column(db.String(150))

@@ -59,3 +59,7 @@ class ResetPasswordForm(FlaskForm):
 class UpdateResponseForm(FlaskForm):
 	updated_response = TextAreaField('Nytt svar', validators=[DataRequired()])
 	submit = SubmitField('Uppdatera svar')
+
+class DeleteResponseForn(FlaskForm):
+	confirmCompanyName = StringField('Skriv in företagets namn nedan för att kunna radera enkäten', validators=[DataRequired()])
+	submit = SubmitField('Radera enkät')
