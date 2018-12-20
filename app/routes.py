@@ -38,14 +38,10 @@ def responses(response_id):
     form = DeleteResponseForn()
     responses = Responses.query.filter_by(response_id=response_id).first()
     if form.validate_on_submit():
-        if form.confirmCompanyName.data == responses.q4:
-            flash(f"Behovsanalys för kund {responses.q4} är nu raderad", "info")
-            db.session.delete(responses)
-            db.session.commit()
-            return redirect(url_for('kund'))
-        else:
-            flash(f'Det gick inte att radera enkäten för kun {responses.q4}. Kontakta kundservice.')
-            return redirect(url_for('kund'))
+        flash(f"Behovsanalys för kund {responses.q4} är nu raderad", "info")
+        db.session.delete(responses)
+        db.session.commit()
+        return redirect(url_for('kund'))
     # Renderar responses.html, res = dict med svar, Questions = hårkodad dict med respektive fråga, form=Responseform som är skapad i Forms.py
     return render_template('responses.html', form=form, title=responses.q4, responses=responses, questions=question_dict, length=len(
         question_dict))
@@ -77,7 +73,7 @@ def register():
         print(first_password)
         # form.password.data = det som användaren har skrivit in i PasswordField (se forms.py). Detta hashas med flasks modul bcrypt
         hashed_password = bcrypt.generate_password_hash(first_password).decode('utf-8')
-        user = User(email=form.email.data, password = hashed_password, admin=form.admin.data)# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
+        user = User(email=form.email.data.lower(), password = hashed_password, admin=form.admin.data)# Inloggningsdetaljer sparas i ett objekt via clasen User från models.py som sparar parametrarna (ID, email, PW)
         send_register_email(user, first_password)   # Skickar inloggningsuppgifter till kontot
         db.session.add(user)  # SQLAlchemy kommando för att adda objektet
         db.session.commit()  # commitar till databasen
