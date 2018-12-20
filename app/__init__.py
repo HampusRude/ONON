@@ -7,8 +7,8 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
-#db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['DB_USER'], pw=os.environ['DB_PASSWORD'], url=os.environ['DB_URL'], db=os.environ['DB_DB'])
-#app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+db_uri = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=os.environ['DB_USER'], pw=os.environ['DB_PASSWORD'], url=os.environ['DB_URL'], db=os.environ['DB_DB'])
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
