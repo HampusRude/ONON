@@ -92,7 +92,7 @@ def send_register_email(user, first_password):
                   recipients=[
                       user.email])  # Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
     # Nedanstående är själva mailet som mottagaren kommer att få från ONONABtest@gmail.com som det ser ut nu
-    msg.body = f'''Nedan är dina inloggningsdetaljer till Behovsanalys.se:
+    msg.body = f'''Nedan är dina inloggningsdetaljer till www.vgsbehovsanalys.se:
     
 Emailadress: {user.email}
 Lösenord: {first_password}
