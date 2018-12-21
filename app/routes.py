@@ -87,7 +87,7 @@ def register():
 
 #TODO: Lägg till en felhanterare ifall mailen inte skulle fungera
 def send_register_email(user, first_password):
-    msg = Message('Ditt konto till www.Behovsanalys.se',  # Mail-funktion från flask_mail
+    msg = Message('Ditt konto till www.vgsbehovsanalys.se',  # Mail-funktion från flask_mail
                   sender='noreply@on-on.se',
                   recipients=[
                       user.email])  # Mottagaren av mailet ska vara den mail som är angiven och finns i databasen
