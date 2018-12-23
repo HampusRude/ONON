@@ -16,7 +16,6 @@ def get_survey_data(url):
         "Content-Type": "application/json"
     })
 
-    # ID = 153577588
     res = s.get(url)
     if res != None:
         return res
@@ -184,13 +183,14 @@ def add_response(response_id):
     details_dict = get_string_dict(details_parsed)          # A dict with ids and corresponding strings
     try:
         res = get_response_data(response_parsed, details_dict)
+        obj = Responses(**res)
 
         # Get the list of response_ids in database
         db_res = Responses.query.all()
         db_res_id = []  # List of ids retrieved from site.db
         for res in db_res:
             db_res_id.append(res.response_id)
-        obj = Responses(**res)
+
         if obj.response_id not in db_res_id:
             db.session.add(obj)
             db.session.commit()
@@ -199,15 +199,14 @@ def add_response(response_id):
             print("Response %s already in database" % (str(obj.response_id)))
     except:
         print("An exception occured")
+        print(response_parsed)
 
 
 def main():
-    retrieve_data()
-    res_list = [10310404153, 10312578983, 10435240668]
+#    retrieve_data()
+    res_list = [10435240668, 10434101129, 10435240668]
     for i in res_list:
         add_response(i)
 
 if __name__ == "__main__":
     main()
-
-
